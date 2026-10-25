@@ -1,3 +1,4 @@
 .env
-
+.venv/
 data/prices/
+__pycache__/
