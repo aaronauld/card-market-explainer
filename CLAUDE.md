@@ -16,7 +16,9 @@ It explains past moves. It does not predict prices or recommend purchases.
 Python, FastAPI, Postgres with pgvector (Docker Compose). Thin React UI later.
 
 ## Data
-- Prices: tcgapi.dev free tier (100 requests/day, non-commercial). History may be backfilled from tcgdex/price-history; check date range, granularity and card coverage first. Keep the source behind a small interface (`get_prices(card_ids)`) so it can be swapped.
+- Prices: historical prices come from tcgdex/price-history, cloned outside the repo (`PRICE_HISTORY_DIR` in `.env`) and loaded into the `prices` table. It covers Nov 2022 to Nov 2023 and May to Sep 2024 only; see `docs/data-notes.md` for gaps. Current prices can come from the TCGdex API (free, no key). tcgapi.dev's free tier has only 7 days of history from Mar 2025, so it is not the main source. Keep the source behind a small interface (`get_prices(card_ids)`) so it can be swapped.
+- Cards: catalogue loaded from the TCGdex API into the `cards` table. Card IDs are TCGdex IDs, e.g. `swsh10-113`.
+- Database: Postgres runs in Docker on host port 5433, because a local Windows Postgres uses 5432. Schema is in `src/ingest/schema.sql`.
 - Events: dated markdown files in `data/events/` with metadata (date, source URL, type, cards or sets mentioned). Sources: official announcements, public tournament results, Bulbapedia (non-commercial licence, credit it).
 - Raw price data and `.env` must never be committed. Check data licensing before publishing anything derived from a source.
 

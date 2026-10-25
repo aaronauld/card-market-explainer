@@ -11,4 +11,11 @@ Pokémon card prices sometimes jump or crash, and the reason is usually scattere
 
 ## Status
 
-Setup in progress: local Postgres with pgvector via Docker Compose, plus project docs and an eval question template. No retrieval or model code yet.
+Data loading in progress:
+
+- Local Postgres with pgvector via Docker Compose.
+- Card catalogue (16,329 cards) loaded from the [TCGdex](https://tcgdex.dev) API.
+- Daily TCGplayer price history (about 2.2 million rows, Nov 2022 to Sep 2024, with a gap from Dec 2023 to Apr 2024) loaded locally from [tcgdex/price-history](https://github.com/tcgdex/price-history). See [docs/data-notes.md](docs/data-notes.md) for coverage gaps and licensing.
+- Eval question template ready; entries not written yet.
+
+No retrieval or model code yet.

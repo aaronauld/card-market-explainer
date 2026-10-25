@@ -5,7 +5,7 @@ import json
 from common import connect, read_env
 
 
-SOURCE = "tcgdex-tcqplayer"
+SOURCE = "tcgdex-tcgplayer"
 
 
 def rows_for_file(card_id, path):
