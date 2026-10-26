@@ -19,6 +19,8 @@ Python, FastAPI, Postgres with pgvector (Docker Compose). Thin React UI later.
 - Prices: historical prices come from tcgdex/price-history, cloned outside the repo (`PRICE_HISTORY_DIR` in `.env`) and loaded into the `prices` table. It covers Nov 2022 to Nov 2023 and May to Sep 2024 only; see `docs/data-notes.md` for gaps. Current prices can come from the TCGdex API (free, no key). tcgapi.dev's free tier has only 7 days of history from Mar 2025, so it is not the main source. Keep the source behind a small interface (`get_prices(card_ids)`) so it can be swapped.
 - Cards: catalogue loaded from the TCGdex API into the `cards` table. Card IDs are TCGdex IDs, e.g. `swsh10-113`.
 - Database: Postgres runs in Docker on host port 5433, because a local Windows Postgres uses 5432. Schema is in `src/ingest/schema.sql`.
+- Embeddings: Voyage AI `voyage-4` (1024 dims) over plain HTTP in `src/retrieval/voyage.py`, key `VOYAGE_API_KEY` in `.env`. Chunks and vectors live in the `chunks` table (`strategy` column: `whole_doc` or `by_section`); load with `python -m src.ingest.load_chunks <strategy>`. Without a payment method Voyage allows 3 requests per minute, so batch texts into one request.
+- Evals: `python -m src.evals.run_retrieval <bm25|vector|vector-sections>`; record every measured run in `docs/results.md`.
 - Events: dated markdown files in `data/events/` with metadata (date, source URL, type, cards or sets mentioned). Sources: official announcements, public tournament results, Bulbapedia (non-commercial licence, credit it).
 - Raw price data and `.env` must never be committed. Check data licensing before publishing anything derived from a source.
 

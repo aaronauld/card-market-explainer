@@ -1,4 +1,7 @@
 """Measure retrieval: for each eval question, do the expected event docs come back?"""
+import sys
+from src.retrieval.vector import VectorSearch
+
 from src.evals.questions import load_questions
 from src.ingest.events import load_events
 from src.retrieval.bm25 import BM25
@@ -16,11 +19,26 @@ def average(numbers):
     return sum(numbers) / len(numbers) if numbers else 0.0
 
 
-def main():
-    events = load_events()
-    index = BM25([(e["id"], e["title"] + "\n" + e["body"]) for e in events])
+def build_retriever(name):
+    """Return an object with a search(query, k) method."""
+    if name == "bm25":
+        events = load_events()
+        return BM25([(e["id"], e["title"] + "\n" + e["body"]) for e in events])
+    if name == "vector":
+        return VectorSearch("whole_doc")
+    if name == "vector-sections":
+        return VectorSearch("by_section")
+    raise ValueError(
+        f"unknown retriever: {name} (use bm25, vector or vector-sections)")
+
+
+def main(name):
+    index = build_retriever(name)
     questions = [q for q in load_questions() if q["event_docs"]]
-    print(f"{len(events)} event docs, {len(questions)} questions with expected docs\n")
+    if hasattr(index, "prepare"):
+        index.prepare([q["question"] for q in questions])
+    print(
+        f"retriever: {name}, {len(questions)} questions with expected docs\n")
 
     results = []
     for q in questions:
@@ -46,4 +64,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1] if len(sys.argv) > 1 else "bm25")
