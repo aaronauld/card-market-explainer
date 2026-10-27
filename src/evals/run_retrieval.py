@@ -5,6 +5,7 @@ from src.retrieval.vector import VectorSearch
 from src.evals.questions import load_questions
 from src.ingest.events import load_events
 from src.retrieval.bm25 import BM25
+from src.retrieval.hybrid import HybridSearch
 
 K_VALUES = [1, 3, 5]
 
@@ -28,6 +29,8 @@ def build_retriever(name):
         return VectorSearch("whole_doc")
     if name == "vector-sections":
         return VectorSearch("by_section")
+    if name == "hybrid":
+        return HybridSearch([build_retriever("bm25"), build_retriever("vector")])
     raise ValueError(
         f"unknown retriever: {name} (use bm25, vector or vector-sections)")
 

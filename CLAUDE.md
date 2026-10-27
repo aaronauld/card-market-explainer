@@ -20,7 +20,7 @@ Python, FastAPI, Postgres with pgvector (Docker Compose). Thin React UI later.
 - Cards: catalogue loaded from the TCGdex API into the `cards` table. Card IDs are TCGdex IDs, e.g. `swsh10-113`.
 - Database: Postgres runs in Docker on host port 5433, because a local Windows Postgres uses 5432. Schema is in `src/ingest/schema.sql`.
 - Embeddings: Voyage AI `voyage-4` (1024 dims) over plain HTTP in `src/retrieval/voyage.py`, key `VOYAGE_API_KEY` in `.env`. Chunks and vectors live in the `chunks` table (`strategy` column: `whole_doc` or `by_section`); load with `python -m src.ingest.load_chunks <strategy>`. Without a payment method Voyage allows 3 requests per minute, so batch texts into one request.
-- Evals: `python -m src.evals.run_retrieval <bm25|vector|vector-sections>`; record every measured run in `docs/results.md`.
+- Evals: `python -m src.evals.run_retrieval <bm25|vector|vector-sections|hybrid>`; record every measured run in `docs/results.md`. Hybrid (BM25 + vector with Reciprocal Rank Fusion, `src/retrieval/hybrid.py`) is the current best retriever.
 - Events: dated markdown files in `data/events/` with metadata (date, source URL, type, cards or sets mentioned). Sources: official announcements, public tournament results, Bulbapedia (non-commercial licence, credit it).
 - Raw price data and `.env` must never be committed. Check data licensing before publishing anything derived from a source.
 

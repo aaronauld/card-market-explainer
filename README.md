@@ -17,4 +17,4 @@ Phase 1 (plain RAG) in progress. Retrieval is built and measured; answer generat
 - Card catalogue (16,329 cards) loaded from the [TCGdex](https://tcgdex.dev) API.
 - Daily TCGplayer price history (about 2.2 million rows, Nov 2022 to Sep 2024, with a gap from Dec 2023 to Apr 2024) loaded locally from [tcgdex/price-history](https://github.com/tcgdex/price-history). See [docs/data-notes.md](docs/data-notes.md) for coverage gaps and licensing.
 - Eval set: 19 labelled price moves in [docs/eval-questions.md](docs/eval-questions.md), and 26 event documents in `data/events/` (9 the questions need, 17 distractors).
-- Two hand-written retrievers measured with the same recall@k harness: BM25 keyword search and Voyage embeddings in pgvector. Both reach recall@5 of about 0.85-0.88 but miss different documents; see [docs/results.md](docs/results.md).
+- Hand-written retrievers measured with the same recall@k harness: BM25 keyword search (recall@5 0.85), Voyage embeddings in pgvector (0.88) and a hybrid of both with Reciprocal Rank Fusion (0.94). See [docs/results.md](docs/results.md).
