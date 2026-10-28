@@ -2,7 +2,7 @@
 import json
 import sys
 import time
-from datetime import date
+from datetime import datetime
 from pathlib import Path
 
 from src.evals.questions import load_questions
@@ -69,7 +69,8 @@ def main(retriever_name):
     print(f"answer cost: ${sum(r['cost'] for r in rows):.2f} total, "
           f"${average([r['cost'] for r in rows]):.3f} per question")
 
-    out = Path("data/runs") / f"answers-{retriever_name}-{date.today()}.json"
+    out = Path("data/runs") / \
+        f"answers-{retriever_name}-{datetime.now():%Y-%m-%d-%H%M}.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(rows, indent=2, default=str), encoding="utf-8")
     print(f"\nsaved {out}")

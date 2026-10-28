@@ -47,6 +47,7 @@ Run with `python -m src.evals.run_answers <retriever>`. Each question goes throu
 | Date | Retriever | Model (effort) | Questions | Fact recall | 1-source | 2-source | No known cause | Citation recall | Bad citations | Seconds per answer | Cost per answer |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | 2026-10-28 | Hybrid (BM25 + vector, RRF) | `claude-opus-5-5` (medium) | 19 | 0.95 | 0.95 | 0.93 | 1.00 (2) | 0.91 | 0 | 7.5 | $0.024 |
+| 2026-10-29 | Hybrid (BM25 + vector, RRF), mean of 2 runs | `claude-opus-5-5` (medium) | 19 | 0.99 (0.97-1.00) | 1.00 | 1.00 | 0.88 (2) | 0.94 | 0 | 7.4 | $0.024 |
 
 ### 2026-10-28: first plain-RAG answer runs
 
@@ -58,3 +59,11 @@ Run with `python -m src.evals.run_answers <retriever>`. Each question goes throu
 - No invented or unseen citations in either run.
 - Answers vary between runs (Q-004 and Q-006 flipped). With 19 questions, treat differences of about 5 points or less between single runs as noise; average several runs before comparing versions.
 - Saved answers and judge reasons for each run are written to `data/runs/` (git-ignored: generated output that includes figures derived from the price data).
+
+### 2026-10-29: repeat runs (current answer key)
+
+- Two runs against the current answer key (after the "Masters" change), compared with `python -m src.evals.compare_runs "data/runs/answers-hybrid-2026-10-29-*.json"`: fact recall 1.00 and 0.97 (mean 0.99), citation recall 0.94 in both.
+- The only question that changed was Q-018 (no known cause): in one run the judge failed "no document mentions Yveltal or a deck using it" because the answer said the other documents "don't involve Yveltal" without stating it outright. The answer was correct in substance. The fact was left unchanged: it is derivable from the documents, so changing it would tune the key to the system.
+- Q-004's generation error from the first run did not repeat.
+- Citation recall misses are systematic, not random: Q-006 and Q-008 never retrieve the Scarlet & Violet release document.
+- Plain RAG is close to this eval's ceiling on fact recall, so the agentic version can only show a difference on citation recall (Q-006, Q-008), cost and latency, or on harder questions. Adding harder, more multi-hop questions is the next step before phase 2.
