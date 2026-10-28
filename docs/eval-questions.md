@@ -15,6 +15,7 @@ Entries were found with `scripts/find_spikes.sql` (weekly median at least double
 - `confirmed`: cause shown by a primary source (official page or Limitless decklists) and the timing fits the daily data.
 - `likely`: good evidence, but part of it is inference (e.g. a deck plays the card, but the price is for a premium printing). The harness can score these separately.
 - `no known cause`: the move is real but no tournament, release, rotation, ban, reprint or announcement explains it. The correct answer says so. These test whether the system makes up a cause.
+- `false premise`: the question assumes a move that didn't happen (e.g. asks why a card spiked when it only drifted). The correct answer corrects the premise from the prices. These test whether the system goes along with a misleading question.
 
 ---
 
@@ -179,7 +180,7 @@ Keep every field on one line starting with `- **Field:**` so the harness can par
 - **Date of move:** 2023-04-01
 - **Direction and size:** up ~2.5x, briefly. $3.30-4.40 in March; $9.21, $9.75, $10.83 on 1-3 Apr (26, 32 and 15 sales); back to $4.40-5.20 from 5 Apr. The reverse holo did the same. Weekly: 1.7x, 205 sales.
 - **Real cause:** This Gardevoir is the second attacker in Gardevoir ex decks (2-3 copies in the Japanese lists at Champions League Aichi, 25 Feb 2023), and the spike lands on the English release of Gardevoir ex in Scarlet & Violet (31 Mar 2023).
-- **Answer must mention:** Gardevoir ex released 31 Mar 2023; Chilling Reign Gardevoir is played alongside Gardevoir ex; the spike was brief
+- **Answer must mention:** Gardevoir ex released 31 Mar 2023; Chilling Reign Gardevoir is played alongside Gardevoir ex; the price peaked around the release and eased in the following weeks
 - **How I know:** [Limitless: CL Aichi 2023](https://limitlesstcg.com/tournaments/361), [Limitless: CL Miyagi 2023](https://limitlesstcg.com/tournaments/364), [Limitless: EUIC 2023](https://limitlesstcg.com/tournaments/351)
 - **Sources needed:** 2
 - **Event docs:** `2023-03-31-scarlet-violet-release`, `2023-02-25-cl-aichi-2023-results`
@@ -334,6 +335,37 @@ Keep every field on one line starting with `- **Field:**` so the harness can par
 - **How I know:** Same as Q-004.
 - **Sources needed:** 2
 - **Event docs:** `2023-11-03-paradox-rift-release`, `2023-11-19-laic-2023-results`
+
+### Q-020: Dark Patch (Lost Origin, 216), August 2024
+
+- **Status:** confirmed
+- **Checked by:** Claude (decklists + daily data), 2026-10-29. TODO (Aaron): spot-check
+- **Question:** Why did Dark Patch from Lost Origin (216) go up again in late August 2024?
+- **Card id:** `swsh11-216`
+- **Price series:** holo, good
+- **Date of move:** 2024-08-18
+- **Direction and size:** up ~1.4-1.5x. Weekly median ~$5.65-6.60 from mid-July to the week of 12 Aug; $7.85 in the week of 19 Aug (13 sales); $8.63 in the week of 26 Aug. Near Mint shows the same: ~$6-6.70 through 17 Aug, 27 sales on 18 Aug and 30 on 19 Aug, then $8.50-9.
+- **Real cause:** A Roaring Moon ex deck finished runner-up at the 2024 World Championships (16-18 Aug 2024). Both Roaring Moon ex lists there (Seinosuke Shiokawa 2nd, Motohiro Higuchi 72nd) played 4 Dark Patch.
+  This needs two documents: the Worlds 2024 document names Roaring Moon ex as runner-up but never mentions Dark Patch, and the LAIC 2023 document says Roaring Moon ex decks play 4 Dark Patch. Same trigger as Q-001.
+- **Answer must mention:** 2024 World Championships (Aug 2024); a Roaring Moon ex deck finished runner-up; Roaring Moon ex decks play Dark Patch
+- **How I know:** [Limitless: Worlds 2024](https://limitlesstcg.com/tournaments/420) (both Roaring Moon lists have 4 Dark Patch), [Limitless: LAIC 2023-24](https://limitlesstcg.com/tournaments/404).
+- **Sources needed:** 2
+- **Event docs:** `2024-08-18-worlds-2024-masters-results`, `2023-11-19-laic-2023-results`
+
+### Q-021: Earthen Vessel (Paradox Rift, 163)
+
+- **Status:** false premise
+- **Checked by:** Claude (decklists + weekly data), 2026-10-29
+- **Question:** Why did Earthen Vessel from Paradox Rift spike after the 2024 World Championships?
+- **Card id:** `sv04-163`
+- **Price series:** normal, good
+- **Date of move:** 2024-08-18
+- **Direction and size:** no spike. Weekly median $4.06-4.25 through July, $4.54-4.60 in early August, $4.90 in the week of 19 Aug, $4.81-5.23 into September (about 100-160 sales a week): a gradual drift of about 20% over two months, with no jump after Worlds.
+- **Real cause:** None needed: the premise is wrong. Both Roaring Moon ex lists at Worlds 2024 played 4 Earthen Vessel, so a spike would look plausible, but the price didn't react the way Roaring Moon ex (Q-001) and Dark Patch (Q-020) did. Earthen Vessel is played in many decks, which may be why one result didn't move it.
+- **Answer must mention:** the price did not spike after Worlds 2024; it rose gradually, from about $4.10 in July to about $4.90 in late August
+- **How I know:** Weekly prices from the data; [Limitless: Worlds 2024](https://limitlesstcg.com/tournaments/420) for the decklists.
+- **Sources needed:** 1
+- **Event docs:** none. The answer comes from the prices; a cited Worlds document is fine only if the answer doesn't claim it caused a spike.
 
 ---
 

@@ -67,3 +67,20 @@ Run with `python -m src.evals.run_answers <retriever>`. Each question goes throu
 - Q-004's generation error from the first run did not repeat.
 - Citation recall misses are systematic, not random: Q-006 and Q-008 never retrieve the Scarlet & Violet release document.
 - Plain RAG is close to this eval's ceiling on fact recall, so the agentic version can only show a difference on citation recall (Q-006, Q-008), cost and latency, or on harder questions. Adding harder, more multi-hop questions is the next step before phase 2.
+
+## Baseline on 21 questions (2026-10-29)
+
+Two questions were added: Q-020 (Dark Patch after Worlds 2024, two sources) and Q-021 (Earthen Vessel, a false premise: it didn't spike). This is the plain-RAG baseline the agentic version will be compared with.
+
+| Date | Pipeline | Questions | recall@1 | recall@3 | recall@5 | 1-source recall@5 | 2-source recall@5 |
+|---|---|---|---|---|---|---|---|
+| 2026-10-29 | Hybrid retrieval | 18 with expected docs (10 one-source, 8 two-source) | 0.69 | 0.83 | 0.94 | 1.00 | 0.88 |
+
+| Date | Pipeline | Questions | Fact recall | Citation recall | Bad citations | Seconds per answer | Cost per answer |
+|---|---|---|---|---|---|---|---|
+| 2026-10-29 | Hybrid + `claude-opus-5-5` (medium), mean of 2 runs | 21 | 0.98 (0.96-1.00) | 0.94 | 0 | 7.1 | $0.024 |
+
+- Q-020 was answered correctly in both runs: hybrid retrieval returned both the Worlds 2024 and LAIC 2023 documents, and the answer linked them ("every published Roaring Moon ex list ran 4 Dark Patch"). Because LAIC names both Dark Patch and Roaring Moon ex, one search finds both, so it is less of a multi-hop test than intended.
+- Q-021 (false premise) was handled in both runs: the answer said the rise started before Worlds and was gradual, quoting the weekly prices.
+- Misses in the second run: Q-018 (the same judge strictness as before, left unchanged) and Q-009 ("the spike was brief"). The Q-009 spike lasted three days in the daily data, but the system sees weekly medians, where it looks like a peak week followed by easing, so the fact wasn't derivable. It was reworded to "the price peaked around the release and eased in the following weeks" after these runs.
+- The only systematic gap is still Q-006 and Q-008 (Scarlet & Violet release never retrieved). Plain RAG is near this eval's ceiling on facts, so the comparison with the agentic version will mostly be about those two questions, cost and latency.
