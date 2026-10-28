@@ -1,0 +1,79 @@
+"""Run every eval question through the full RAG pipeline and score the answers."""
+import json
+import sys
+import time
+from datetime import date
+from pathlib import Path
+
+from src.evals.questions import load_questions
+from src.evals.run_retrieval import average, build_retriever
+from src.evals.score_answer import check_citations, judge_facts
+from src.generation.answer import answer
+from src.generation.claude import Claude
+from src.ingest.events import load_events
+
+DOLLARS_PER_MILLION = {"input": 4.00, "output": 20.00}  # claude-opus-5-5
+
+
+def cost(input_tokens, output_tokens):
+    return (input_tokens * DOLLARS_PER_MILLION["input"]
+            + output_tokens * DOLLARS_PER_MILLION["output"]) / 1_000_000
+
+
+def main(retriever_name):
+    questions = load_questions()
+    events = {e["id"]: e for e in load_events()}
+    retriever = build_retriever(retriever_name)
+    if hasattr(retriever, "prepare"):
+        retriever.prepare([q["question"] for q in questions])
+    llm, judge = Claude(), Claude(effort="low")
+
+    rows = []
+    for q in questions:
+        start = time.perf_counter()
+        result = answer(q["question"], q["card_id"], q["variant"], q["move_date"],
+                        retriever, llm, events)
+        seconds = time.perf_counter() - start
+
+        citations = check_citations(result, q["event_docs"], set(events))
+        facts = judge_facts(q["question"], result["answer"],
+                            q["must_mention"], judge)
+        fact_recall = sum(f["present"] for f in facts) / len(facts)
+
+        rows.append({
+            "id": q["id"], "status": q["status"], "sources_needed": q["sources_needed"],
+            "has_docs": bool(q["event_docs"]), "fact_recall": fact_recall,
+            "seconds": round(seconds, 1),
+            "cost": cost(result["input_tokens"], result["output_tokens"]),
+            **citations, "facts": facts, **result,
+        })
+        bad = len(citations["invented"]) + len(citations["not_retrieved"])
+        print(f"{q['id']}  facts={fact_recall:.2f}  citations={citations['citation_recall']}  "
+              f"bad_citations={bad}  {seconds:.1f}s")
+
+    print(f"\nfact recall: {average([r['fact_recall'] for r in rows]):.2f}")
+    for status in ("confirmed", "likely", "no known cause"):
+        subset = [r["fact_recall"] for r in rows if r["status"] == status]
+        print(f"  {status} ({len(subset)}): {average(subset):.2f}")
+    for n in (1, 2):
+        subset = [r["fact_recall"]
+                  for r in rows if r["has_docs"] and r["sources_needed"] == n]
+        print(f"  {n}-source ({len(subset)}): {average(subset):.2f}")
+    recalls = [r["citation_recall"]
+               for r in rows if r["citation_recall"] is not None]
+    print(f"citation recall: {average(recalls):.2f}")
+    print(
+        f"bad citations: {sum(len(r['invented']) + len(r['not_retrieved']) for r in rows)}")
+    print(
+        f"avg seconds per answer: {average([r['seconds'] for r in rows]):.1f}")
+    print(f"answer cost: ${sum(r['cost'] for r in rows):.2f} total, "
+          f"${average([r['cost'] for r in rows]):.3f} per question")
+
+    out = Path("data/runs") / f"answers-{retriever_name}-{date.today()}.json"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(rows, indent=2, default=str), encoding="utf-8")
+    print(f"\nsaved {out}")
+
+
+if __name__ == "__main__":
+    main(sys.argv[1] if len(sys.argv) > 1 else "hybrid")

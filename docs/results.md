@@ -34,3 +34,27 @@ Run with `python -m src.evals.run_retrieval <retriever>` (`bm25`, `vector`, `vec
 - Fixed exactly the questions where the two retrievers each found one document: Q-005 and Q-019 now return both LAIC 2023 and the Paradox Rift release. Q-009 stays fixed. With 17 questions this is promising rather than proven, but each gain has a clear cause.
 - Still missed: Q-006 and Q-008 (Scarlet & Violet release). These need a multi-hop link (card, then the deck that plays it, then the set that released that deck's main card), which retrieval from the question alone can't make. Left for the agentic version.
 - Hybrid is the retriever carried forward into answer generation.
+
+## Answers
+
+Run with `python -m src.evals.run_answers <retriever>`. Each question goes through the full pipeline: retrieve the top 5 documents, add a weekly price summary, ask Claude for an explanation that cites documents by id. Then:
+
+- **Fact recall**: share of the question's **Answer must mention** facts the answer states, judged by Claude (`claude-opus-5-5`, effort `low`) with a reason for every verdict.
+- **Citation recall**: share of the expected event documents the answer cites (questions with expected documents only).
+- **Bad citations**: citations of documents that don't exist or weren't in the prompt.
+- **Latency**: time per answer (retrieval + prices + Claude), excluding the judge. **Cost**: answer calls only, at $4 / $20 per million input / output tokens.
+
+| Date | Retriever | Model (effort) | Questions | Fact recall | 1-source | 2-source | No known cause | Citation recall | Bad citations | Seconds per answer | Cost per answer |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 2026-10-28 | Hybrid (BM25 + vector, RRF) | `claude-opus-5-5` (medium) | 19 | 0.95 | 0.95 | 0.93 | 1.00 (2) | 0.91 | 0 | 7.5 | $0.024 |
+
+### 2026-10-28: first plain-RAG answer runs
+
+- The first run (fact recall 0.89) was mostly scoring the answer key, not the system: five **Answer must mention** facts needed knowledge the documents don't contain (e.g. "it was a widely played staple"). They were rewritten, and the eval now has a rule that every fact must be derivable from the prices and documents. The row above is the second run, against the fixed key.
+- One genuine failure: Q-004 (Dark Patch, Lost Origin). LAIC 2023 was retrieved first and says every Roaring Moon ex list played 4 Dark Patch, but the answer claimed no document connects Dark Patch to a deck. A generation error, not a retrieval error. The same question passed in the first run.
+- One judge-strictness miss: Q-017 failed only for not saying the win was in the "Masters" division. "Masters" was then dropped from the Q-001, Q-016 and Q-017 facts; the row above predates that change.
+- Two-source fact recall is flattering. Q-006 and Q-008 never retrieve the Scarlet & Violet release document (citation recall 0.5), but other documents mention the 31 March 2023 release in passing, so the facts can still be stated. Citation recall is the more honest measure of whether the intended evidence was found.
+- Both no-cause questions (Q-015, Q-018) said plainly that nothing explains the move and cited nothing that claims a cause.
+- No invented or unseen citations in either run.
+- Answers vary between runs (Q-004 and Q-006 flipped). With 19 questions, treat differences of about 5 points or less between single runs as noise; average several runs before comparing versions.
+- Saved answers and judge reasons for each run are written to `data/runs/` (git-ignored: generated output that includes figures derived from the price data).

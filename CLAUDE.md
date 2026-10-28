@@ -21,6 +21,8 @@ Python, FastAPI, Postgres with pgvector (Docker Compose). Thin React UI later.
 - Database: Postgres runs in Docker on host port 5433, because a local Windows Postgres uses 5432. Schema is in `src/ingest/schema.sql`.
 - Embeddings: Voyage AI `voyage-4` (1024 dims) over plain HTTP in `src/retrieval/voyage.py`, key `VOYAGE_API_KEY` in `.env`. Chunks and vectors live in the `chunks` table (`strategy` column: `whole_doc` or `by_section`); load with `python -m src.ingest.load_chunks <strategy>`. Without a payment method Voyage allows 3 requests per minute, so batch texts into one request.
 - Evals: `python -m src.evals.run_retrieval <bm25|vector|vector-sections|hybrid>`; record every measured run in `docs/results.md`. Hybrid (BM25 + vector with Reciprocal Rank Fusion, `src/retrieval/hybrid.py`) is the current best retriever.
+- Answers: `src/generation/answer.py` (retrieve, add `price_context` from `src/prices.py`, ask Claude, extract `[doc-id]` citations). Claude is called through the official `anthropic` SDK in `src/generation/claude.py` (model `claude-opus-5-5`, key `ANTHROPIC_API_KEY` in `.env`). Score with `python -m src.evals.run_answers <retriever>` (fact recall via a Claude judge, citation checks in code, latency, cost); run outputs go to `data/runs/` (git-ignored).
+- Every **Answer must mention** fact in `docs/eval-questions.md` must be derivable from the prices and documents the system is given.
 - Events: dated markdown files in `data/events/` with metadata (date, source URL, type, cards or sets mentioned). Sources: official announcements, public tournament results, Bulbapedia (non-commercial licence, credit it).
 - Raw price data and `.env` must never be committed. Check data licensing before publishing anything derived from a source.
 

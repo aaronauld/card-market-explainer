@@ -2,3 +2,4 @@
 .venv/
 data/prices/
 __pycache__/
+data/runs/

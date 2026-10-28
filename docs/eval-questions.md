@@ -7,6 +7,8 @@ Each entry is a real price move with a known cause (or, for a few, a deliberatel
 
 Rule: at least 40% of entries must need two sources to explain fully. These test whether retrieval can find more than one relevant document.
 
+Rule: every fact under **Answer must mention** has to be derivable from what the system is given (the weekly prices and the event documents). Facts that need outside knowledge, such as "it was a widely played staple" when no document says so, are not fair to score and were removed after the first answer run (2026-10-28).
+
 Entries were found with `scripts/find_spikes.sql` (weekly median at least doubled, or 1.6x for some, and stayed there with enough sales), then checked in the daily prices and against sources. All prices are TCGplayer `good` condition, in US dollars.
 
 **Status** values:
@@ -51,7 +53,7 @@ Keep every field on one line starting with `- **Field:**` so the harness can par
   Single-sale outliers on 13 Aug ($5.31) and 15 Aug ($11.92) are noise.
 - **Real cause:** Seinosuke Shiokawa took a Roaring Moon ex deck to the Masters final of the 2024 World Championships in Honolulu (16-18 Aug 2024), losing 2-1 to Fernando Cifuentes (Iron Thorns ex). Motohiro Higuchi also finished 72nd with Roaring Moon ex.
   Shrouded Fable (released 2 Aug 2024) added cards to the deck, but the price did not move until the final.
-- **Answer must mention:** 2024 World Championships (Aug 2024); a Roaring Moon ex deck finished runner-up in Masters
+- **Answer must mention:** 2024 World Championships (Aug 2024); a Roaring Moon ex deck finished runner-up
 - **How I know:** [Limitless: Worlds 2024](https://limitlesstcg.com/tournaments/420), [Pokémon.com: Worlds 2024 TCG Masters](https://www.pokemon.com/us/play-pokemon/worlds/2024/tcg-masters). Secondary: [SNKRDUNK](https://snkrdunk.com/en/magazine/2024/08/19/pokemon-tcg-fernando-cifuentes-beats-seinosuke-shiokawa-to-win-the-2024-pokemon-tcg-world-championships).
 - **Sources needed:** 1
 - **Event docs:** `2024-08-18-worlds-2024-masters-results`
@@ -192,7 +194,7 @@ Keep every field on one line starting with `- **Field:**` so the harness can par
 - **Date of move:** 2023-03-13
 - **Direction and size:** down ~2.5x. Weekly median ~$2.80-3.70 from mid-Feb to early March; $1.99 in the week of 13 Mar (250 sales); $1.42 by 27 Mar; ~$1.10-1.40 through April.
 - **Real cause:** Scoop Up Net has the D regulation mark, so the 2023 Standard rotation (announced 12 Dec 2022) removed it from Standard. Rotation took effect on 30 Mar 2023 on Pokémon TCG Live and 14 Apr 2023 at in-person events. The price stepped down in mid-March, ahead of both dates, then kept sliding.
-- **Answer must mention:** 2023 Standard rotation removed D regulation mark cards; rotation dates (TCG Live 30 Mar, in-person 14 Apr 2023); it was a widely played staple losing Standard legality
+- **Answer must mention:** 2023 Standard rotation removed D regulation mark cards; rotation dates (TCG Live 30 Mar, in-person 14 Apr 2023)
 - **How I know:** [Pokémon.com: 2023 rotation announcement](https://www.pokemon.com/us/pokemon-news/2023-pokemon-tcg-standard-format-rotation-and-pokemon-tool-errata), [Pokémon.com: rotation strategy article](https://www.pokemon.com/us/strategy/2023-pokemon-tcg-standard-format-rotation-strategy) (names Scoop Up Net as a big loss). Secondary: [PokeGuardian, 12 Dec 2022](https://www.pokeguardian.com/1117731_pokemon-tcg-standard-format-rotation-announced-for-april-14-2023-pokemon-tool-card-errata).
 - **Sources needed:** 1
 - **Event docs:** `2022-12-12-2023-standard-rotation-announced`
@@ -207,7 +209,7 @@ Keep every field on one line starting with `- **Field:**` so the harness can par
 - **Date of move:** 2023-03-13
 - **Direction and size:** down ~2x then further. ~$2.00-2.15 from Dec to early March; $1.37 in the week of 13 Mar (129 sales); ~$1.10 in April; ~$0.30-0.40 by June.
 - **Real cause:** D regulation mark card removed by the 2023 Standard rotation (see Q-010). The pokemon.com strategy article names it as a format-defining staple leaving Standard.
-- **Answer must mention:** 2023 Standard rotation removed D regulation mark cards; rotation dates (30 Mar / 14 Apr 2023); it was a staple
+- **Answer must mention:** 2023 Standard rotation removed D regulation mark cards; rotation dates (30 Mar / 14 Apr 2023)
 - **How I know:** Same pokemon.com pages as Q-010.
 - **Sources needed:** 1
 - **Event docs:** `2022-12-12-2023-standard-rotation-announced`
@@ -222,7 +224,7 @@ Keep every field on one line starting with `- **Field:**` so the harness can par
 - **Date of move:** 2023-03-13
 - **Direction and size:** down ~4-6x over two months. ~$1.40-1.70 in Dec-Jan; ~$1.25 in Feb; $0.72 in the week of 13 Mar (268 sales); $0.38 by mid-April; ~$0.25 by late May.
 - **Real cause:** D regulation mark card removed by the 2023 Standard rotation (see Q-010). The pokemon.com strategy article names it alongside Aurora Energy as a format-defining staple leaving Standard.
-- **Answer must mention:** 2023 Standard rotation removed D regulation mark cards; rotation dates (30 Mar / 14 Apr 2023); it was a staple
+- **Answer must mention:** 2023 Standard rotation removed D regulation mark cards; rotation dates (30 Mar / 14 Apr 2023)
 - **How I know:** Same pokemon.com pages as Q-010.
 - **Sources needed:** 1
 - **Event docs:** `2022-12-12-2023-standard-rotation-announced`
@@ -267,7 +269,7 @@ Keep every field on one line starting with `- **Field:**` so the harness can par
 - **Date of move:** 2023-04-10
 - **Direction and size:** up ~2x, briefly. Weekly median $2.45 before; $5.59 and $5.99 in the next two weeks (29 sales); back to $2.73 after. On 12 Apr (16 sales) and 17 Apr (15 sales) the daily average was ~$15.
 - **Real cause:** None found. No tournament, reprint, ban or announcement explains it. The Japanese Pokémon Card 151 reveal (around 1 Apr 2023) did not lift vintage Gen 1 cards in general (an index of ~500 vintage cards did not move).
-- **Answer must mention:** no event specifically explains it; it was a short spike on a few sales that reverted within weeks
+- **Answer must mention:** no event specifically explains it; the price fell back to its earlier level within weeks
 - **How I know:** Searched tournaments, announcements and TCGplayer price reports; checked a vintage-card index in the data.
 - **Sources needed:** 1
 - **Event docs:** none. Retrieval should return nothing relevant; the harness checks the answer, not recall.
@@ -283,7 +285,7 @@ Keep every field on one line starting with `- **Field:**` so the harness can par
 - **Direction and size:** up ~3x. Weekly median $2.75-3.16 through June (63 sales in the week of 26 Jun); $8.29 in the week of 3 Jul; $9.42 in the week of 17 Jul. No data for 2-6 Jul, so the exact first day isn't visible.
 - **Real cause:** Cyrus Davis won the Masters division of the North America International Championships (Columbus, 30 Jun - 2 Jul 2023) with Inteleon VMAX / Rapid Strike Urshifu VMAX, a rarely played deck. The winning list ran 3 Inteleon VMAX (Fusion Strike 79).
   Rapid Strike Urshifu VMAX, already widely played, did not move.
-- **Answer must mention:** North America International Championships 2023 (Jul 2023); Cyrus Davis won Masters with an Inteleon VMAX / Rapid Strike Urshifu deck
+- **Answer must mention:** North America International Championships 2023 (Jul 2023); Cyrus Davis won with an Inteleon VMAX / Rapid Strike Urshifu deck
 - **How I know:** [Limitless: NAIC 2023](https://limitlesstcg.com/tournaments/360) (1st, Inteleon Urshifu; list has 3 Inteleon VMAX FST 79). Secondary: [Wargamer](https://www.wargamer.com/pokemon-trading-card-game/north-american-international-championships-final).
 - **Sources needed:** 1
 - **Event docs:** `2023-07-02-naic-2023-results`
@@ -298,7 +300,7 @@ Keep every field on one line starting with `- **Field:**` so the harness can par
 - **Date of move:** 2023-07-03
 - **Direction and size:** up ~2-2.5x. Weekly median $1.76 in the week of 26 Jun (50 sales); $3.09 in the week of 3 Jul; $4.29 in the week of 17 Jul.
 - **Real cause:** Same as Q-016: the NAIC 2023 winning list ran 3 Inteleon V alongside 3 Inteleon VMAX.
-- **Answer must mention:** North America International Championships 2023 (Jul 2023); an Inteleon VMAX deck won Masters
+- **Answer must mention:** North America International Championships 2023 (Jul 2023); an Inteleon VMAX deck won the event
 - **How I know:** Same as Q-016.
 - **Sources needed:** 1
 - **Event docs:** `2023-07-02-naic-2023-results`
@@ -313,7 +315,7 @@ Keep every field on one line starting with `- **Field:**` so the harness can par
 - **Date of move:** 2024-06-17
 - **Direction and size:** up ~1.7x. Near Mint: $8.00-9.10 on 1-8 Jun (5-38 sales a day); $14.10-15.90 on 17-20 Jun; ~$12-15 into July. The typical Paradox Rift card did not move in the same weeks.
 - **Real cause:** None found. The card has no competitive play (no Limitless decklists), and no announcement, product or event explains it. Probably collector demand.
-- **Answer must mention:** no tournament, reprint, ban or announcement explains it; the card is not played competitively
+- **Answer must mention:** no tournament, reprint, ban or announcement explains it; no document mentions Yveltal or a deck using it
 - **How I know:** Searched Limitless, announcements and news; compared with the rest of Paradox Rift in the data.
 - **Sources needed:** 1
 - **Event docs:** none. Retrieval should return nothing relevant; the harness checks the answer, not recall.
