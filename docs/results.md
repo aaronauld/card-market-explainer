@@ -137,3 +137,26 @@ Each question's **Price series** condition is now passed to the price summary in
 - The agent costs 2.5x as much as plain RAG and is about 1.5x slower, for 5 points of citation recall on two questions.
 - **Why harder questions weren't enough:** the corpus has only 26 documents, with a handful in any one month, so top-5 retrieval for a card and month returns most of that month's documents whether or not the link is understood. Real use would have many more documents per month (every Regional, product and article). Growing the corpus with realistic same-month distractors is the experiment that would test whether one-step retrieval breaks down and the agent's searching pays off.
 - Two-source share is 10 of 26 (38%), below the 40% rule (it was 8 of 21 after Q-021). The next questions added should be two-source.
+
+## 62-document corpus (2026-10-29)
+
+36 real distractor documents were added for the months the questions cover (other Regionals and Special Events, Japanese and English set releases, Worlds 2024 Seniors and Juniors), so each month has several plausible documents instead of one to three. The questions and answer key are unchanged.
+
+| Date | Retriever | Corpus | Questions | recall@1 | recall@3 | recall@5 | 1-source recall@5 | 2-source recall@5 |
+|---|---|---|---|---|---|---|---|---|
+| 2026-10-29 | BM25 | 62 event docs | 21 (11 one-source, 10 two-source) | 0.57 | 0.81 | 0.81 | 1.00 | 0.60 |
+| 2026-10-29 | Vector (`voyage-4`, `whole_doc`) | 62 event docs | 21 (11 one-source, 10 two-source) | 0.43 | 0.62 | 0.69 | 0.91 | 0.45 |
+| 2026-10-29 | Hybrid (RRF) | 62 event docs | 21 (11 one-source, 10 two-source) | 0.50 | 0.69 | 0.81 | 1.00 | 0.60 |
+
+| Date | Pipeline | Questions | Fact recall | 2-source fact recall | Citation recall | Bad citations | Seconds per answer | Cost per answer |
+|---|---|---|---|---|---|---|---|---|
+| 2026-10-29 | Plain RAG: hybrid + `claude-opus-5-5` (medium), 62 docs, mean of 2 runs | 26 | 0.92 (0.91-0.92) | 0.79 | 0.81 (0.81-0.81) | 0 | 7.1 | $0.025 |
+
+- Hybrid recall@5 fell from 0.95 (26 docs) to 0.81. All of the loss is on two-source questions (0.90 to 0.60); one-source questions stayed at 1.00. The documents that drop out are set releases that don't name the card in the question: Paradox Rift (Q-005, Q-019, Q-024), Scarlet & Violet (Q-006, Q-008, Q-009) and Shrouded Fable (Q-022).
+- Vector search suffered most (0.69), even losing a one-source question (Q-003). With several releases and Regionals per month, documents about the same month look alike to the embeddings.
+- Plain RAG's answers fell with retrieval: fact recall 1.00 to 0.92, citation recall 0.95 to 0.81. Failures follow the missing document, not bad generation:
+  - Q-019 (Dark Patch, facts 0.00 in both runs): all five retrieved documents were distractors. The answer said no provided document explains the rise, instead of inventing a cause.
+  - Q-022 (Regidrago VSTAR, 0.00 and 0.33): Worlds 2024 and the NAIC trap were retrieved, but not Shrouded Fable. The answer correctly reasoned that NAIC was too early and Worlds too late, then said nothing explains the rise.
+  - Q-006 (0.67 in both runs): the Silver Tempest release (a new distractor) took the place of the Scarlet & Violet release, so Miraidon ex's release isn't mentioned.
+- No invented or unseen citations, and the false-premise and no-cause questions still passed. With weaker retrieval, plain RAG says "no document explains this" rather than guessing.
+- Next: the agent on the 62-document corpus, without and then with the weak-retrieval retry, 2 runs each.
