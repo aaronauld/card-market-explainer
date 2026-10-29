@@ -101,3 +101,16 @@ Run with `python -m src.evals.run_answers agent`. The agent (`src/agent/agent.py
 - Searches per question across both runs: one search 21 times, two 18 times, three once, four twice. The agent stops when its results feel sufficient, not when it has the primary source for each event.
 - Latency includes any waits for Voyage's free-tier rate limit (3 requests per minute) when the agent embeds a new search query.
 - Next experiment: add a general rule to the agent's instructions to cite the document mainly about each event, and to search for it if it hasn't been seen. Measure it on 2 runs as its own row.
+
+### 2026-10-29: primary-source rule
+
+One bullet was added to the agent's instructions, and nothing else changed: "For each event you rely on, cite the document that is mainly about that event, not one that only mentions it in passing. If you haven't seen that document yet, search for it." This is a general citation rule. It doesn't name any card, deck or set.
+
+| Date | Pipeline | Questions | Fact recall | Citation recall | Bad citations | Tool calls per question | Seconds per answer | Cost per answer |
+|---|---|---|---|---|---|---|---|---|
+| 2026-10-29 | Agent + primary-source rule, mean of 2 runs | 21 | 1.00 (1.00-1.00) | 1.00 (1.00-1.00) | 0 | 2.86 | 11.0 | $0.057 |
+
+- **Q-006 is fixed in both runs.** After the tournament search, the agent searched "Scarlet & Violet base set release Miraidon ex", working out on its own that Regieleki VMAX is played in Miraidon ex decks and that Miraidon ex came from Scarlet & Violet. Q-008 kept its two-search pattern.
+- The extra searches went mostly where they were needed. Questions answered after one search fell from 10-11 to 7 per run, and questions with two searches rose to 11. Cost rose about 14% ($0.050 to $0.057), and latency barely changed.
+- Both runs made the same searches with the same queries, so the rule also made the agent more consistent.
+- Caveat: 1.00 means this eval is saturated. Only Q-006 and Q-008 were real multi-hop tests, so this shows the rule closed the known gap, not that the agent is reliable on multi-hop questions in general. Harder questions (longer chains, misleading distractor documents) are needed to tell the pipelines apart again.
