@@ -10,6 +10,7 @@ SYSTEM = """You explain why a Pokémon trading card's price moved, using tools t
 - For each event you rely on, cite the document that is mainly about that event, not one that only mentions it in passing. If you haven't seen that document yet, search for it.
 - If nothing explains the move, say so plainly instead of guessing. If the question assumes a move the prices don't show, say so.
 - Explain the past only: no predictions and no buying or selling advice.
+- If every result of a search is a weak match, or none is about the card or its deck, rephrase the query (use card, deck or set names) and search again.
 - Keep the final answer under 150 words."""
 
 MAX_ROUNDS = 8

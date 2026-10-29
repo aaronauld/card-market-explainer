@@ -4,6 +4,8 @@ from datetime import date
 from src.ingest.common import connect, read_env
 from src.prices import price_context
 
+STRONG_MATCH = 0.025
+
 TOOLS = [
     {
         "name": "search_documents",
@@ -78,14 +80,15 @@ class ToolBox:
         raise ValueError(f"unknown tool: {name}")
 
     def search_documents(self, query):
-        doc_ids = [doc_id for doc_id, _ in self.retriever.search(query, k=5)]
+        results = self.retriever.search(query, k=5)
         parts = []
-        for doc_id in doc_ids:
+        for doc_id, score in results:
             if doc_id not in self.seen_doc_ids:
                 self.seen_doc_ids.append(doc_id)
             doc = self.events[doc_id]
+            match = "strong" if score >= STRONG_MATCH else "weak"
             parts.append(
-                f'<document id="{doc_id}" date="{doc["date"]}">\n{doc["body"]}\n</document>')
+                f'<document id="{doc_id}" date="{doc["date"]}" match="{match}">\n{doc["body"]}\n</document>')
         return "\n\n".join(parts)
 
     def find_cards(self, name):
