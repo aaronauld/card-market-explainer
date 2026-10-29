@@ -367,16 +367,94 @@ Keep every field on one line starting with `- **Field:**` so the harness can par
 - **Sources needed:** 1
 - **Event docs:** none. The answer comes from the prices; a cited Worlds document is fine only if the answer doesn't claim it caused a spike.
 
+### Q-022: Regidrago VSTAR (Silver Tempest, 136), August 2024
+
+- **Status:** likely
+- **Checked by:** Claude (decklists + daily data), 2026-10-29. TODO (Aaron): spot-check
+- **Question:** Why did Regidrago VSTAR from Silver Tempest roughly double in price in early August 2024?
+- **Card id:** `swsh12-136`
+- **Price series:** holo, good
+- **Date of move:** 2024-08-04
+- **Direction and size:** up ~2x. Weekly median $6.66-7.24 in early-to-mid July; $9.45 in the week of 22 Jul; $11.92 in the week of 29 Jul; $13.33-14.95 from 5 to 19 Aug (26-46 sales a week). Near Mint (300-450 sales a week) shows the step most clearly: ~$8-11 through 3 Aug, $16.54 on 4 Aug and $18.41 on 5 Aug, then $14-16 until Worlds.
+- **Real cause:** Shrouded Fable (released 2 Aug 2024) brought Kyurem (Shrouded Fable 47), whose Trifrost attack Regidrago VSTAR copies with Apex Dragon. At the 2024 World Championships (16-18 Aug), 34 of the 35 Regidrago lists played 1 Kyurem, and Regidrago finished 4th, 5th, 7th and 8th.
+  Status is `likely` because part of the climb (late July) came before the English release, probably in anticipation: Kyurem was already out in Japan (Night Wanderer). Q-003 (NAIC 2024, June) is the same card's earlier move. A system that cites NAIC for this one has the timing wrong.
+- **Answer must mention:** Shrouded Fable release (2 Aug 2024) with Kyurem; Regidrago VSTAR copies Kyurem's Trifrost attack; Regidrago decks finished 4th, 5th, 7th and 8th at the 2024 World Championships
+- **How I know:** [Limitless: Worlds 2024](https://limitlesstcg.com/tournaments/420) (34 of 35 Regidrago lists with 1 Kyurem), [Bulbapedia: Kyurem (Shrouded Fable 47)](https://bulbapedia.bulbagarden.net/wiki/Kyurem_(Shrouded_Fable_47)), [Bulbapedia: Regidrago VSTAR](https://bulbapedia.bulbagarden.net/wiki/Regidrago_VSTAR_(TCG)).
+- **Sources needed:** 2
+- **Event docs:** `2024-08-02-shrouded-fable-release`, `2024-08-18-worlds-2024-masters-results`
+
+### Q-023: Regidrago V (Silver Tempest, 183), August 2024
+
+- **Status:** false premise
+- **Checked by:** Claude (decklists + weekly data), 2026-10-29
+- **Question:** Why did Regidrago V from Silver Tempest spike in August 2024?
+- **Card id:** `swsh12-183`
+- **Price series:** holo, nearmint
+  The `good` series has only 1-9 sales a week and its weekly medians jump around ($5.22-9.18), so it would show spikes that aren't real. Near Mint has 34-78 sales a week.
+- **Date of move:** 2024-08-04
+- **Direction and size:** no spike. Near Mint weekly median $5.21-5.38 from late June to mid July, $5.75-6.33 from late July to mid August, $5.69 in the week of 26 Aug, then $4.00-4.94 in September: a small drift up and back down.
+- **Real cause:** None needed: the premise is wrong. Every top Regidrago list at Worlds 2024 played 3 Regidrago V, and Regidrago VSTAR doubled in the same weeks (Q-022), so a spike would look plausible. But Regidrago V barely moved.
+- **Answer must mention:** the price did not spike in August 2024; it stayed between about $5 and $6.50
+- **How I know:** Weekly prices from the data; [Limitless: Worlds 2024](https://limitlesstcg.com/tournaments/420) for the decklists.
+- **Sources needed:** 1
+- **Event docs:** none. The answer comes from the prices; a cited Worlds or Shrouded Fable document is fine only if the answer doesn't claim it caused a spike.
+
+### Q-024: Hisuian Electrode V (Lost Origin, 172)
+
+- **Status:** likely
+- **Checked by:** Claude (decklists + daily data), 2026-10-29. TODO (Aaron): spot-check
+- **Question:** Why did Hisuian Electrode V from Lost Origin go up in November 2023?
+- **Card id:** `swsh11-172`
+- **Price series:** holo, good
+- **Date of move:** 2023-11-08
+- **Direction and size:** up ~3x in two steps. $1.97-2.43 from 25 Oct to 5 Nov; $3.70 on 8 Nov and $3.95 on 10 Nov; $7.59-8.11 on 17-20 Nov. Weekly: $2.24-2.27 in late Oct, $3.70 in the week of 6 Nov (49 sales), $7.64 in the week of 13 Nov, $5.66 in the week of 20 Nov.
+- **Real cause:** A deck built around the new Klawf (Paradox Rift 105, released 3 Nov 2023) played Hisuian Electrode V. The only recorded list with it is a Klawf deck at the Latin America International Championships (17-19 Nov 2023, 85th place, 3 copies).
+  Status is `likely`: there's only one list, and the first rise (8 Nov) came before any recorded result. This is a three-step link: card, then the deck that plays it, then the set that released that deck's main card.
+- **Answer must mention:** Paradox Rift release (3 Nov 2023) with a new Klawf; a Klawf deck at LAIC 2023 played Hisuian Electrode V
+- **How I know:** [Limitless: LAIC 2023-24](https://limitlesstcg.com/tournaments/404) (Lucas Pedrosa, 85th, Klawf with 3 Hisuian Electrode V).
+- **Sources needed:** 2
+- **Event docs:** `2023-11-03-paradox-rift-release`, `2023-11-19-laic-2023-results`
+
+### Q-025: Scoop Up Net (Rebel Clash, 165), wrong direction
+
+- **Status:** false premise
+- **Checked by:** Claude (weekly data), 2026-10-29
+- **Question:** Why did Scoop Up Net from Rebel Clash jump in price in March 2023?
+- **Card id:** `swsh2-165`
+- **Price series:** normal, good
+- **Date of move:** 2023-03-13
+- **Direction and size:** down, not up. The same move as Q-010: weekly median ~$2.80-3.70 from mid-Feb to early March; $1.99 in the week of 13 Mar (250 sales); $1.42 by 27 Mar.
+- **Real cause:** The premise has the direction wrong: the price fell. Scoop Up Net has the D regulation mark, so the 2023 Standard rotation (announced 12 Dec 2022) removed it from Standard (see Q-010).
+  This tests whether the system reads the direction from the prices instead of accepting the question's framing. Retrieval is the same as Q-010.
+- **Answer must mention:** the price fell in March 2023, it didn't jump; the 2023 Standard rotation removed D regulation mark cards, including Scoop Up Net
+- **How I know:** Same as Q-010.
+- **Sources needed:** 1
+- **Event docs:** `2022-12-12-2023-standard-rotation-announced`
+
+### Q-026: Regidrago VSTAR (Silver Tempest, 136), fall after Worlds 2024
+
+- **Status:** no known cause
+- **Checked by:** Claude (weekly data + event dates), 2026-10-29
+- **Question:** Why did Regidrago VSTAR from Silver Tempest lose about half its value in late August and early September 2024?
+- **Card id:** `swsh12-136`
+- **Price series:** holo, good
+- **Date of move:** 2024-08-26
+- **Direction and size:** down ~2x. Weekly median $14.95 in the week of 19 Aug; $12.01 in the week of 26 Aug (44 sales); $8.25 in the week of 2 Sep; $7.03-7.89 in mid-September, back to about its July level. Near Mint shows the same ($19.32 on 19 Aug, ~$7.50 by mid-September).
+- **Real cause:** None found. No rotation, ban, reprint or result explains it. The Stellar Crown ban list (15 Aug) only banned Duskull in Expanded, and the Stellar Crown release (13 Sep) came after most of the fall. A sell-off after the Worlds hype is plausible but nothing documents it.
+  Nearby documents make a cause easy to invent: Worlds 2024 (where Regidrago did well), the Stellar Crown ban list, and Shrouded Fable.
+- **Answer must mention:** no document explains the fall; the price fell back to about its July level
+- **How I know:** Weekly prices from the data; event dates from `data/events/`; [Limitless: Worlds 2024](https://limitlesstcg.com/tournaments/420).
+- **Sources needed:** 1
+- **Event docs:** none. Citing Worlds 2024 to say the deck did well before the fall is fine; citing any document as the cause of the fall is not.
+
 ---
 
 ## Candidates (not yet confirmed)
 
 Real moves without a confirmed cause yet. Move one up to **Entries** (with the next Q number) once it is confirmed.
 
-- **Regidrago VSTAR** (`swsh12-136`), Jul-Aug 2024: weekly median ~$6.70 in early July, $11.90-14.95 from 29 Jul to 19 Aug, then down to ~$7 by mid-September. Regidrago took 4th, 5th, 7th and 8th at Worlds 2024 ([Limitless](https://limitlesstcg.com/tournaments/420)), but the climb started three weeks before Worlds. TODO: find what drove late July (other events, Japanese results), or phrase the question around the fall after Worlds.
 - **Origin Forme Dialga VSTAR** (`swsh10-114`), Apr 2023: ~$3.50 to $11.68 by 14 Apr. Not in EUIC 2023 lists. TODO: check Japanese results and Scarlet & Violet-era decks.
 - **Inteleon VMAX** (`swsh8-79`), Apr 2023: ~$3 to ~$9-10 (a separate move from Q-016 in July). Only two EUIC 2023 lists. TODO: same as Dialga.
-- **Hisuian Electrode V** (`swsh11-172`), Nov 2023: ~$2-2.40 to ~$7.70-8.10 by 17-20 Nov. Every early list with it is a Klawf deck (Klawf, Paradox Rift 105, released 3 Nov 2023), but the price rose from 8 Nov, before the first recorded list (LAIC, 17 Nov). TODO: find earlier results or a dated deck write-up.
 - **Raikou** (`swsh4-50`), Dec 2022: ~$3.30-4 to ~$8.40-11.20 from 24 Dec. A 1-copy card in Lugia VSTAR decks, which won Regional Arlington (17-18 Dec 2022), but its share of Lugia lists didn't change and Lugia itself didn't move. No clear cause.
 - **Dragonite V** (`swshp-SWSH154`), Apr 2023: ~$6-7 to ~$11-12.60 from 11 Apr. A 1-copy Lost Zone Box card already played before the rise. No cause found.
 - **Battle VIP Pass** (`swsh8-225`), Apr 2023: rose with Gardevoir ex decks (4 copies), but was already a staple in Lost Zone Box and Mew. Too ambiguous.

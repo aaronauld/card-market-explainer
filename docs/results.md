@@ -114,3 +114,26 @@ One bullet was added to the agent's instructions, and nothing else changed: "For
 - The extra searches went mostly where they were needed. Questions answered after one search fell from 10-11 to 7 per run, and questions with two searches rose to 11. Cost rose about 14% ($0.050 to $0.057), and latency barely changed.
 - Both runs made the same searches with the same queries, so the rule also made the agent more consistent.
 - Caveat: 1.00 means this eval is saturated. Only Q-006 and Q-008 were real multi-hop tests, so this shows the rule closed the known gap, not that the agent is reliable on multi-hop questions in general. Harder questions (longer chains, misleading distractor documents) are needed to tell the pipelines apart again.
+
+## 26 questions (2026-10-29)
+
+Five harder questions were added: Q-022 (Regidrago VSTAR after Shrouded Fable brought Kyurem: a three-step link, with an earlier NAIC move as a timing trap), Q-023 (Regidrago V, a false premise), Q-024 (Hisuian Electrode V through a Klawf deck: a three-step link), Q-025 (Scoop Up Net with the direction wrong in the question) and Q-026 (Regidrago VSTAR's fall after Worlds: no known cause, with nearby events that tempt an invented one). The Shrouded Fable and Worlds 2024 documents gained the Kyurem and Regidrago facts these need.
+
+Each question's **Price series** condition is now passed to the price summary in both pipelines (until now both always used `good`). Q-023 is the only question that uses another condition (`nearmint`): its `good` series has 1-9 sales a week, and the weekly medians jump around enough to look like spikes.
+
+| Date | Pipeline | Questions | recall@1 | recall@3 | recall@5 | 1-source recall@5 | 2-source recall@5 |
+|---|---|---|---|---|---|---|---|
+| 2026-10-29 | Hybrid retrieval | 21 with expected docs (11 one-source, 10 two-source) | 0.62 | 0.86 | 0.95 | 1.00 | 0.90 |
+
+| Date | Pipeline | Questions | Fact recall | Citation recall | Bad citations | Tool calls per question | Seconds per answer | Cost per answer |
+|---|---|---|---|---|---|---|---|---|
+| 2026-10-29 | Plain RAG: hybrid + `claude-opus-5-5` (medium), mean of 2 runs | 26 | 1.00 (1.00-1.00) | 0.95 (0.95-0.95) | 0 | — | 7.5 | $0.025 |
+| 2026-10-29 | Agent + primary-source rule, mean of 2 runs | 26 | 0.99 (0.98-1.00) | 1.00 (1.00-1.00) | 0 | 3.0 | 11.5 | $0.063 |
+
+- **The new questions didn't separate the pipelines.** Both got all five right in both runs. Plain RAG retrieved both expected documents for Q-022 and Q-024, including the Shrouded Fable release, which names Kyurem but not Regidrago. The agent found the same documents by searching for them deliberately ("Shrouded Fable set release Kyurem", "Paradox Rift set release Klawf").
+- Both pipelines read the prices correctly on the false-premise and wrong-direction questions (Q-023, Q-025), and neither invented a cause for Q-026. On Q-026 the agent made 5-6 searches looking for a cause, which made it the slowest question (about 20 s).
+- Plain RAG's only citation misses are still Q-006 and Q-008 (the Scarlet & Violet release, 0.5 each), which is the whole 0.95 vs 1.00 gap.
+- The agent's one fact miss is Q-018 in the second run: the same judge strictness as before (the answer said no tournament, release or announcement explains it, but didn't also say reprint or ban). Left unchanged, as before.
+- The agent costs 2.5x as much as plain RAG and is about 1.5x slower, for 5 points of citation recall on two questions.
+- **Why harder questions weren't enough:** the corpus has only 26 documents, with a handful in any one month, so top-5 retrieval for a card and month returns most of that month's documents whether or not the link is understood. Real use would have many more documents per month (every Regional, product and article). Growing the corpus with realistic same-month distractors is the experiment that would test whether one-step retrieval breaks down and the agent's searching pays off.
+- Two-source share is 10 of 26 (38%), below the 40% rule (it was 8 of 21 after Q-021). The next questions added should be two-source.

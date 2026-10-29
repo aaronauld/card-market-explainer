@@ -60,17 +60,19 @@ TOOLS = [
 class ToolBox:
     """Runs the tools, and remembers every document the model has been shown."""
 
-    def __init__(self, retriever, events):
+    def __init__(self, retriever, events, condition="good"):
         self.retriever = retriever
         self.events = events
         self.seen_doc_ids = []
+        self.condition = condition
 
     def run(self, name, args):
         if name == "search_documents":
             return self.search_documents(args["query"])
         if name == "get_price_summary":
             return price_context(args["card_id"], args["variant"],
-                                 date.fromisoformat(args["around_date"]))
+                                 date.fromisoformat(args["around_date"]),
+                                 condition=self.condition)
         if name == "find_cards":
             return self.find_cards(args["name"])
         raise ValueError(f"unknown tool: {name}")

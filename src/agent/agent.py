@@ -15,9 +15,9 @@ SYSTEM = """You explain why a Pokémon trading card's price moved, using tools t
 MAX_ROUNDS = 8
 
 
-def answer_with_agent(question, card_id, variant, move_date, retriever, llm, events):
+def answer_with_agent(question, card_id, variant, move_date, retriever, llm, events, condition="good"):
     """Run the agent for one question. Returns the same kind of dict as answer()."""
-    toolbox = ToolBox(retriever, events)
+    toolbox = ToolBox(retriever, events, condition)
     messages = [{"role": "user", "content": (
         f"<question>\n{question}\n</question>\n\n"
         f"<card>\n{card_label(card_id)}, variant {variant}\n</card>\n\n"

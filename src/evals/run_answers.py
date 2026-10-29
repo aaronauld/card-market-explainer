@@ -36,7 +36,7 @@ def main(retriever_name):
     for q in questions:
         start = time.perf_counter()
         result = pipeline(q["question"], q["card_id"], q["variant"], q["move_date"],
-                          retriever, llm, events)
+                          retriever, llm, events, condition=q["condition"])
         seconds = time.perf_counter() - start
 
         citations = check_citations(result, q["event_docs"], set(events))

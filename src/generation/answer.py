@@ -43,13 +43,13 @@ def build_prompt(question, card, prices, documents):
     return "\n\n".join(parts)
 
 
-def answer(question, card_id, variant, move_date, retriever, llm, events, k=5):
+def answer(question, card_id, variant, move_date, retriever, llm, events, k=5, condition="good"):
     """Run the whole pipeline for one question. Returns a dict for the harness."""
     doc_ids = [doc_id for doc_id, _ in retriever.search(question, k=k)]
     prompt = build_prompt(
         question,
         card_label(card_id),
-        price_context(card_id, variant, move_date),
+        price_context(card_id, variant, move_date, condition=condition),
         [events[doc_id] for doc_id in doc_ids],
     )
     text, usage = llm.ask(SYSTEM, prompt)
