@@ -101,7 +101,7 @@ Keep every field on one line starting with `- **Field:**` so the harness can par
 - **Date of move:** 2023-10-19
 - **Direction and size:** up ~3-5x. ~$5 in early Oct; $7-9 from 19-24 Oct; $14 on 26 Oct; peak $25.76 on 3 Nov; ~$14-15 by late Nov. Weekly: 2.7x, 50 sales.
 - **Real cause:** Paradox Rift (released 3 Nov 2023) introduced Roaring Moon ex, and Roaring Moon ex decks are built around Dark Patch: all 6 Roaring Moon ex lists at LAIC 2023 (17-19 Nov) played 4.
-  The rise starts about two weeks before the English release, so card reveals or the Japanese release (around 27 Oct) likely started it. Not yet checked.
+  The rise starts about two weeks before the English release. The Japanese release of Roaring Moon ex (Ancient Roar, 27 Oct 2023, now in `data/events/`) came after the 19 Oct start too, so earlier card reveals probably started it; that part is not confirmed.
 - **Answer must mention:** Paradox Rift release (3 Nov 2023) with Roaring Moon ex; Roaring Moon ex decks play 4 Dark Patch
 - **How I know:** [Pokémon.com: Paradox Rift](https://www.pokemon.com/us/pokemon-tcg/scarlet-violet-paradox-rift), [Limitless: LAIC 2023-24](https://limitlesstcg.com/tournaments/404)
 - **Sources needed:** 2
@@ -379,7 +379,7 @@ Keep every field on one line starting with `- **Field:**` so the harness can par
 - **Real cause:** Shrouded Fable (released 2 Aug 2024) brought Kyurem (Shrouded Fable 47), whose Trifrost attack Regidrago VSTAR copies with Apex Dragon. At the 2024 World Championships (16-18 Aug), 34 of the 35 Regidrago lists played 1 Kyurem, and Regidrago finished 4th, 5th, 7th and 8th.
   Status is `likely` because part of the climb (late July) came before the English release, probably in anticipation: Kyurem was already out in Japan (Night Wanderer). Q-003 (NAIC 2024, June) is the same card's earlier move. A system that cites NAIC for this one has the timing wrong.
 - **Answer must mention:** Shrouded Fable release (2 Aug 2024) with Kyurem; Regidrago VSTAR copies Kyurem's Trifrost attack; Regidrago decks finished 4th, 5th, 7th and 8th at the 2024 World Championships
-- **How I know:** [Limitless: Worlds 2024](https://limitlesstcg.com/tournaments/420) (34 of 35 Regidrago lists with 1 Kyurem), [Bulbapedia: Kyurem (Shrouded Fable 47)](https://bulbapedia.bulbagarden.net/wiki/Kyurem_(Shrouded_Fable_47)), [Bulbapedia: Regidrago VSTAR](https://bulbapedia.bulbagarden.net/wiki/Regidrago_VSTAR_(TCG)).
+- **How I know:** [Limitless: Worlds 2024](https://limitlesstcg.com/tournaments/420) (34 of 35 Regidrago lists with 1 Kyurem), [CardCodex: Kyurem 047/064](https://cardcodex.com/pokemon/scarlet-violet/shrouded-fable/kyurem-47-64-uncommon/), [Serebii: Night Wanderer](https://www.serebii.net/card/nightwanderer/) (Kyurem first released in Japan, 7 Jun 2024).
 - **Sources needed:** 2
 - **Event docs:** `2024-08-02-shrouded-fable-release`, `2024-08-18-worlds-2024-masters-results`
 

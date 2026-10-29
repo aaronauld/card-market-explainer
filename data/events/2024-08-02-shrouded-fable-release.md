@@ -4,6 +4,8 @@ title: Scarlet & Violet—Shrouded Fable released
 type: set_release
 sources:
   - https://www.pokemon.com/us/pokemon-tcg/scarlet-violet-shrouded-fable
+  - https://cardcodex.com/pokemon/scarlet-violet/shrouded-fable/kyurem-47-64-uncommon/
+  - https://www.serebii.net/card/nightwanderer/
 written: 2026-10-25
 ---
 
@@ -20,4 +22,4 @@ Shrouded Fable, a special expansion in the Scarlet & Violet series, was released
 
 ## Sources
 
-Release date and featured Pokémon ex from the official Pokémon TCG Shrouded Fable page. Kyurem's card details from Bulbapedia (Kyurem, Shrouded Fable 47), used under its non-commercial licence.
+Release date and featured Pokémon ex from the official Pokémon TCG Shrouded Fable page. Kyurem's card details from CardCodex (Kyurem 047/064); its Japanese release in Night Wanderer from Serebii.
