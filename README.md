@@ -11,11 +11,12 @@ Pokémon card prices sometimes jump or crash, and the reason is usually scattere
 
 ## Status
 
-Phase 1 (plain RAG) working end to end: retrieval, price lookup, answers with citations from Claude, and automatic scoring. Next: tidy-up and repeated runs, then the agentic version.
+Phase 1 (plain RAG) is working end to end: retrieval, price lookup, answers with citations from Claude, and automatic scoring. Phase 2 (agentic version) has started: a hand-written tool-use loop in which Claude chooses when to look up prices and search documents. It is scored with the same harness.
 
 - Local Postgres with pgvector via Docker Compose.
 - Card catalogue (16,329 cards) loaded from the [TCGdex](https://tcgdex.dev) API.
 - Daily TCGplayer price history (about 2.2 million rows, Nov 2022 to Sep 2024, with a gap from Dec 2023 to Apr 2024) loaded locally from [tcgdex/price-history](https://github.com/tcgdex/price-history). See [docs/data-notes.md](docs/data-notes.md) for coverage gaps and licensing.
-- Eval set: 19 labelled price moves in [docs/eval-questions.md](docs/eval-questions.md), and 26 event documents in `data/events/` (9 the questions need, 17 distractors).
+- Eval set: 21 labelled price moves in [docs/eval-questions.md](docs/eval-questions.md), and 26 event documents in `data/events/` (9 the questions need, 17 distractors).
 - Hand-written retrievers measured with the same recall@k harness: BM25 keyword search (recall@5 0.85), Voyage embeddings in pgvector (0.88) and a hybrid of both with Reciprocal Rank Fusion (0.94). See [docs/results.md](docs/results.md).
-- Answers: hybrid retrieval plus a weekly price summary, explained by Claude Opus 5.5 with citations to event documents. On the 19 questions: fact recall 0.95, citation recall 0.91, no invented citations, about 7.5 s and $0.024 per answer (single run; answers vary between runs).
+- Answers: hybrid retrieval plus a weekly price summary, explained by Claude Opus 5.5 with citations to event documents. On the 21 questions (mean of 2 runs): fact recall 0.98, citation recall 0.94, no invented citations, about 7.1 s and $0.024 per answer.
+- Agent: on the same 21 questions (mean of 2 runs): fact recall 1.00, citation recall 0.96, no invented citations, 2.6 tool calls, about 10.8 s and $0.050 per answer. It made a multi-hop link plain RAG misses on one question (Q-008), but not on another (Q-006).

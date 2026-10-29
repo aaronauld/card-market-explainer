@@ -84,3 +84,20 @@ Two questions were added: Q-020 (Dark Patch after Worlds 2024, two sources) and 
 - Q-021 (false premise) was handled in both runs: the answer said the rise started before Worlds and was gradual, quoting the weekly prices.
 - Misses in the second run: Q-018 (the same judge strictness as before, left unchanged) and Q-009 ("the spike was brief"). The Q-009 spike lasted three days in the daily data, but the system sees weekly medians, where it looks like a peak week followed by easing, so the fact wasn't derivable. It was reworded to "the price peaked around the release and eased in the following weeks" after these runs.
 - The only systematic gap is still Q-006 and Q-008 (Scarlet & Violet release never retrieved). Plain RAG is near this eval's ceiling on facts, so the comparison with the agentic version will mostly be about those two questions, cost and latency.
+
+## Agent vs plain RAG (21 questions)
+
+Run with `python -m src.evals.run_answers agent`. The agent (`src/agent/agent.py`) is a hand-written tool-use loop: Claude chooses when to call `get_price_summary` (the same weekly summary plain RAG gets), `search_documents` (hybrid search, top 5) and `find_cards`, for up to 8 rounds, then answers with citations. Scoring is unchanged. Citation checks count every document the agent saw in any search as "retrieved". Cost covers all of the agent's calls.
+
+| Date | Pipeline | Questions | Fact recall | Citation recall | Bad citations | Tool calls per question | Seconds per answer | Cost per answer |
+|---|---|---|---|---|---|---|---|---|
+| 2026-10-29 | Plain RAG: hybrid + `claude-opus-5-5` (medium), mean of 2 runs | 21 | 0.98 (0.96-1.00) | 0.94 | 0 | — | 7.1 | $0.024 |
+| 2026-10-29 | Agent: `claude-opus-5-5` (medium) with 3 tools, mean of 2 runs | 21 | 1.00 (1.00-1.00) | 0.96 (0.94-0.97) | 0 | 2.6 | 10.8 | $0.050 |
+
+- The agent costs about 2.1× as much and is about 1.5× slower for about 2 points more citation recall, which is within run-to-run noise. Plain RAG was already near this eval's ceiling, so there was little left to gain.
+- **Q-008 (Worker) was fixed in both runs.** The agent's second search, "Scarlet & Violet base set release Gardevoir ex", found the release document that plain RAG never retrieves. This is the multi-hop step (card, then the deck that plays it, then the set that released the deck's main card) that retrieval alone can't make.
+- **Q-006 (Regieleki VMAX) missed in both runs, the same way.** The agent made one search ("Regieleki VMAX tournament results April 2023"), and a tournament document that mentions the Scarlet & Violet release in passing was enough to explain the move, so it stopped and never fetched the release document. In one earlier single-question test it did search again, so the step happens only sometimes.
+- Q-007 scored 0.5 in the first run and 1.0 in the second. Both times it searched once, and the second time that one search happened to return both documents.
+- Searches per question across both runs: one search 21 times, two 18 times, three once, four twice. The agent stops when its results feel sufficient, not when it has the primary source for each event.
+- Latency includes any waits for Voyage's free-tier rate limit (3 requests per minute) when the agent embeds a new search query.
+- Next experiment: add a general rule to the agent's instructions to cite the document mainly about each event, and to search for it if it hasn't been seen. Measure it on 2 runs as its own row.

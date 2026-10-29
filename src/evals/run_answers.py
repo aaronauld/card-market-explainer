@@ -11,6 +11,7 @@ from src.evals.score_answer import check_citations, judge_facts
 from src.generation.answer import answer
 from src.generation.claude import Claude
 from src.ingest.events import load_events
+from src.agent.agent import answer_with_agent
 
 DOLLARS_PER_MILLION = {"input": 4.00, "output": 20.00}  # claude-opus-5-5
 
@@ -23,16 +24,19 @@ def cost(input_tokens, output_tokens):
 def main(retriever_name):
     questions = load_questions()
     events = {e["id"]: e for e in load_events()}
-    retriever = build_retriever(retriever_name)
-    if hasattr(retriever, "prepare"):
-        retriever.prepare([q["question"] for q in questions])
+    if retriever_name == "agent":
+        pipeline, retriever = answer_with_agent, build_retriever("hybrid")
+    else:
+        pipeline, retriever = answer, build_retriever(retriever_name)
+        if hasattr(retriever, "prepare"):
+            retriever.prepare([q["question"] for q in questions])
     llm, judge = Claude(), Claude(effort="low")
 
     rows = []
     for q in questions:
         start = time.perf_counter()
-        result = answer(q["question"], q["card_id"], q["variant"], q["move_date"],
-                        retriever, llm, events)
+        result = pipeline(q["question"], q["card_id"], q["variant"], q["move_date"],
+                          retriever, llm, events)
         seconds = time.perf_counter() - start
 
         citations = check_citations(result, q["event_docs"], set(events))
@@ -52,7 +56,7 @@ def main(retriever_name):
               f"bad_citations={bad}  {seconds:.1f}s")
 
     print(f"\nfact recall: {average([r['fact_recall'] for r in rows]):.2f}")
-    for status in ("confirmed", "likely", "no known cause"):
+    for status in ("confirmed", "likely", "no known cause", "false premise"):
         subset = [r["fact_recall"] for r in rows if r["status"] == status]
         print(f"  {status} ({len(subset)}): {average(subset):.2f}")
     for n in (1, 2):
@@ -64,6 +68,8 @@ def main(retriever_name):
     print(f"citation recall: {average(recalls):.2f}")
     print(
         f"bad citations: {sum(len(r['invented']) + len(r['not_retrieved']) for r in rows)}")
+    calls = [len(r.get("tool_calls", [])) for r in rows]
+    print(f"avg tool calls per question: {average(calls):.1f}")
     print(
         f"avg seconds per answer: {average([r['seconds'] for r in rows]):.1f}")
     print(f"answer cost: ${sum(r['cost'] for r in rows):.2f} total, "

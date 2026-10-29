@@ -44,3 +44,23 @@ class Claude:
         """Like ask, but returns the reply parsed into Python (dicts and lists)."""
         text, usage = self.ask(system, prompt, schema=schema)
         return json.loads(text), usage
+
+    def create(self, system, messages, tools=None, max_tokens=16000):
+        """One API call with a full message list. Returns the raw response (used by the agent)."""
+        extra = {"tools": tools} if tools else {}
+        response = self.client.beta.messages.create(
+            model=self.model,
+            max_tokens=max_tokens,
+            system=system,
+            messages=messages,
+            output_config={"effort": self.effort},
+            betas=["server-side-fallback-2026-07-01"],
+            fallbacks="default",
+            **extra,
+        )
+        if response.stop_reason == "refusal":
+            raise RuntimeError(
+                f"Claude declined the request: {response.stop_details}")
+        if response.stop_reason == "max_tokens":
+            raise RuntimeError("Response was cut off: raise max_tokens")
+        return response

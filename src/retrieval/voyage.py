@@ -2,6 +2,7 @@
 import json
 import urllib.error
 import urllib.request
+import time
 
 URL = "https://api.voyageai.com/v1/embeddings"
 MODEL = "voyage-4"
@@ -26,13 +27,18 @@ def embed(texts, input_type, api_key):
             "Content-Type": "application/json",
             "Authorization": f"Bearer {api_key}",
         })
-        try:
-            with urllib.request.urlopen(request, timeout=60) as response:
-                result = json.load(response)
-        except urllib.error.HTTPError as err:
-            message = err.read().decode("utf-8")
-            raise RuntimeError(
-                f"Voyage API error {err.code}: {message}") from err
+        for attempt in range(5):
+            try:
+                with urllib.request.urlopen(request, timeout=60) as response:
+                    result = json.load(response)
+                break
+            except urllib.error.HTTPError as err:
+                if err.code == 429 and attempt < 4:
+                    time.sleep(21)  # free tier: 3 requests per minute
+                    continue
+                message = err.read().decode("utf-8")
+                raise RuntimeError(
+                    f"Voyage API error {err.code}: {message}") from err
 
         items = sorted(result["data"], key=lambda item: item["index"])
         vectors.extend(item["embedding"] for item in items)
