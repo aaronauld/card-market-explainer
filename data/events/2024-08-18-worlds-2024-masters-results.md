@@ -10,7 +10,7 @@ cards:
   - sv04-262
   - swsh12-136
   - swsh12-201
-  - swsh12-183
+  - swsh12-135
 sets:
   - sv04
   - swsh12
@@ -31,7 +31,7 @@ The 2024 Pokémon TCG World Championships ran in Honolulu, Hawaii, from 16 to 18
 - **Winner:** Fernando Cifuentes (Chile), playing Iron Thorns ex.
 - **Runner-up:** Seinosuke Shiokawa (Japan), playing a Roaring Moon ex deck. Roaring Moon ex is from the Paradox Rift set (Paradox Rift 124, with alternate printings 229, 251 and 262). Shiokawa lost the best-of-three final 2-1.
 - **Other Roaring Moon ex results:** Motohiro Higuchi also played Roaring Moon ex and finished 72nd.
-- **Regidrago VSTAR decks:** 35 of the 127 players in the Limitless standings played Regidrago. Regidrago finished 4th (Raz Wolpe), 5th (Isaiah Bradner), 7th (Ian Robb) and 8th (Michael Davidson). The deck is built around Regidrago VSTAR (Silver Tempest 136), whose Apex Dragon attack copies an attack from a Dragon Pokémon in the player's discard pile. 34 of the 35 lists played 1 Kyurem (Shrouded Fable 47), so Regidrago VSTAR could use Kyurem's Trifrost attack. The top Regidrago lists played 3 Regidrago V (Silver Tempest 183) and 3 Regidrago VSTAR.
+- **Regidrago VSTAR decks:** 35 of the 127 players in the Limitless standings played Regidrago. Regidrago finished 4th (Raz Wolpe), 5th (Isaiah Bradner), 7th (Ian Robb) and 8th (Michael Davidson). The deck is built around Regidrago VSTAR (Silver Tempest 136), whose Apex Dragon attack copies an attack from a Dragon Pokémon in the player's discard pile. 34 of the 35 lists played 1 Kyurem (Shrouded Fable 47), so Regidrago VSTAR could use Kyurem's Trifrost attack. The top Regidrago lists played 3 Regidrago V (Silver Tempest 135) and 3 Regidrago VSTAR.
 - The final was played on 18 August 2024.
 
 ## Sources

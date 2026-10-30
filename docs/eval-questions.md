@@ -387,13 +387,13 @@ Keep every field on one line starting with `- **Field:**` so the harness can par
 
 - **Status:** false premise
 - **Checked by:** Claude (decklists + weekly data), 2026-10-29
-- **Question:** Why did Regidrago V from Silver Tempest spike in August 2024?
+- **Question:** Why did the alternate-art Regidrago V from Silver Tempest (183) spike in August 2024?
 - **Card id:** `swsh12-183`
 - **Price series:** holo, nearmint
   The `good` series has only 1-9 sales a week and its weekly medians jump around ($5.22-9.18), so it would show spikes that aren't real. Near Mint has 34-78 sales a week.
 - **Date of move:** 2024-08-04
 - **Direction and size:** no spike. Near Mint weekly median $5.21-5.38 from late June to mid July, $5.75-6.33 from late July to mid August, $5.69 in the week of 26 Aug, then $4.00-4.94 in September: a small drift up and back down.
-- **Real cause:** None needed: the premise is wrong. Every top Regidrago list at Worlds 2024 played 3 Regidrago V, and Regidrago VSTAR doubled in the same weeks (Q-022), so a spike would look plausible. But Regidrago V barely moved.
+- **Real cause:** None needed: the premise is wrong. The top Regidrago lists at Worlds 2024 played 3 Regidrago V (listed as the regular printing, 135), and Regidrago VSTAR doubled in the same weeks (Q-022), so a spike would look plausible. But the alternate art (183) barely moved.
 - **Answer must mention:** the price did not spike in August 2024; it stayed between about $5 and $6.50
 - **How I know:** Weekly prices from the data; [Limitless: Worlds 2024](https://limitlesstcg.com/tournaments/420) for the decklists.
 - **Sources needed:** 1
@@ -446,6 +446,38 @@ Keep every field on one line starting with `- **Field:**` so the harness can par
 - **How I know:** Weekly prices from the data; event dates from `data/events/`; [Limitless: Worlds 2024](https://limitlesstcg.com/tournaments/420).
 - **Sources needed:** 1
 - **Event docs:** none. Citing Worlds 2024 to say the deck did well before the fall is fine; citing any document as the cause of the fall is not.
+
+### Q-027: Magma Basin (Brilliant Stars, 185)
+
+- **Status:** likely
+- **Checked by:** Claude (decklists + daily data), 2026-10-31. TODO (Aaron): spot-check
+- **Question:** Why did the Magma Basin from Brilliant Stars (185) go up in late November 2023?
+- **Card id:** `swsh9-185`
+- **Price series:** holo, good
+- **Date of move:** 2023-11-19
+- **Direction and size:** up ~1.7x. Weekly median $5.03-6.75 from September to the week of 6 Nov; $7.54 in the week of 13 Nov (39 sales); $9.79 in the week of 20 Nov (34 sales). Daily: 28 sales at $7.54 on 19 Nov, $9.43 on 20 Nov, $10-11.62 on 22-24 Nov.
+- **Real cause:** Paradox Rift (released 3 Nov 2023) brought Iron Valiant ex, and an Entei V / Iron Valiant ex deck finished 2nd at the Latin America International Championships (17-19 Nov 2023). All 3 Entei lists there played 4 Magma Basin.
+  Status is `likely` because the price is for a premium printing, and the regular Magma Basin (Brilliant Stars 144) is too noisy to show a clear move.
+- **Answer must mention:** an Entei V / Iron Valiant ex deck finished 2nd at LAIC 2023; that deck plays 4 Magma Basin; Paradox Rift release (3 Nov 2023) with Iron Valiant ex
+- **How I know:** [Limitless: LAIC 2023-24](https://limitlesstcg.com/tournaments/404) (Noah Sawyer 2nd, Magnus Pedersen 60th and Wellington Luis Lins Zoobi Filho 74th, each with 4 Magma Basin), [Pokémon.com: Paradox Rift](https://www.pokemon.com/us/pokemon-tcg/scarlet-violet-paradox-rift). Iron Valiant ex's printing from the TCGdex card data.
+- **Sources needed:** 2
+- **Event docs:** `2023-11-19-laic-2023-results`, `2023-11-03-paradox-rift-release`
+
+### Q-028: Regidrago V (Silver Tempest, 135)
+
+- **Status:** likely
+- **Checked by:** Claude (decklists + weekly data), 2026-10-31. TODO (Aaron): spot-check
+- **Question:** Why did the regular Regidrago V from Silver Tempest (135) go up in August 2024?
+- **Card id:** `swsh12-135`
+- **Price series:** holo, nearmint
+- **Date of move:** 2024-08-05
+- **Direction and size:** up ~1.3x. Near Mint weekly median $2.38-2.55 from 8 to 22 Jul; $2.68 in the week of 29 Jul; $3.15-3.35 from 5 to 19 Aug (197-344 sales a week); $2.05-2.44 in September.
+- **Real cause:** Same as Q-022: Shrouded Fable (released 2 Aug 2024) brought Kyurem, whose Trifrost attack Regidrago VSTAR copies, and the top Regidrago lists at the 2024 World Championships played 3 of this Regidrago V.
+  Status is `likely` because the move is modest and part of it comes before the release. The alternate art of the same card (183) didn't spike (Q-023), so the answer has to read this printing's prices.
+- **Answer must mention:** Shrouded Fable release (2 Aug 2024) with Kyurem; Regidrago decks at the 2024 World Championships play 3 Regidrago V
+- **How I know:** [Limitless: Worlds 2024](https://limitlesstcg.com/tournaments/420) (top lists have 3 Regidrago V, SIT 135), [CardCodex: Kyurem 047/064](https://cardcodex.com/pokemon/scarlet-violet/shrouded-fable/kyurem-47-64-uncommon/).
+- **Sources needed:** 2
+- **Event docs:** `2024-08-02-shrouded-fable-release`, `2024-08-18-worlds-2024-masters-results`
 
 ---
 

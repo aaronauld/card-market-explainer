@@ -26,6 +26,7 @@ Paradox Rift, the fourth main expansion of the Scarlet & Violet series, was rele
 - The set is built around Paradox Pokémon: Ancient Pokémon such as Roaring Moon ex and Future Pokémon. Roaring Moon ex and Sandy Shocks ex are among the featured Ancient Pokémon ex.
 - Roaring Moon ex appears as Paradox Rift 124, with alternate printings 229, 251 and 262.
 - The set also includes a new Klawf (Paradox Rift 105).
+- Iron Valiant ex (Paradox Rift 89) is among the set's Future Pokémon ex.
 - New sets become legal in Standard tournaments shortly after release.
 
 ## Sources
