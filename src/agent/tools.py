@@ -14,6 +14,8 @@ TOOLS = [
             "announcements). Returns the 5 most relevant, each with its id and date. Search again "
             "with a different query if the first results don't explain the move, for example for "
             "the deck a card is played in, or the set that deck's main card came from."
+            ' Each result has match="strong" (keyword and meaning search both found it) or '
+            'match="weak" (only one did).'
         ),
         "input_schema": {
             "type": "object",
