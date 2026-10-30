@@ -159,4 +159,20 @@ Each question's **Price series** condition is now passed to the price summary in
   - Q-022 (Regidrago VSTAR, 0.00 and 0.33): Worlds 2024 and the NAIC trap were retrieved, but not Shrouded Fable. The answer correctly reasoned that NAIC was too early and Worlds too late, then said nothing explains the rise.
   - Q-006 (0.67 in both runs): the Silver Tempest release (a new distractor) took the place of the Scarlet & Violet release, so Miraidon ex's release isn't mentioned.
 - No invented or unseen citations, and the false-premise and no-cause questions still passed. With weaker retrieval, plain RAG says "no document explains this" rather than guessing.
-- Next: the agent on the 62-document corpus, without and then with the weak-retrieval retry, 2 runs each.
+
+### Agent on 62 documents, without and with the weak-retrieval retry
+
+The retry labels each search result `match="strong"` when both BM25 and vector search found it (fused score at least 0.025) and `match="weak"` when only one did. The agent is told to rephrase and search again when every result is weak, or none is about the card or its deck.
+
+| Date | Pipeline | Questions | Fact recall | Citation recall | Bad citations | Tool calls per question | Seconds per answer | Cost per answer |
+|---|---|---|---|---|---|---|---|---|
+| 2026-10-29 | Plain RAG (same row as above), mean of 2 runs | 26 | 0.92 (0.91-0.92) | 0.81 (0.81-0.81) | 0 | — | 7.1 | $0.025 |
+| 2026-10-31 | Agent + primary-source rule, no retry, mean of 2 runs | 26 | 0.99 (0.97-1.00) | 0.99 (0.98-1.00) | 0 | 2.9 | 12.1 | $0.062 |
+| 2026-10-31 | Agent + primary-source rule + retry, mean of 2 runs | 26 | 1.00 (1.00-1.00) | 1.00 (1.00-1.00) | 0 | 2.9 | 11.8 | $0.064 |
+
+- **This is the main phase 2 result.** With distractors in the corpus, the agent's citation recall is 18 points higher than plain RAG's and its fact recall about 7 points higher, for about 2.5x the cost and about 5 s more per answer. On the 26-document corpus the citation gap was only 5 points. The extra searches pay off when one-step retrieval gets crowded out.
+- The agent recovers the missing documents by naming them, e.g. "Shrouded Fable set release Kyurem" (Q-022) and "Paradox Rift release Roaring Moon ex" (Q-019). Plain RAG scored 0.00-0.33 on those two questions' facts.
+- **The retry made no measurable difference.** Tool calls were the same (2.9), and the search counts barely changed (8 one-search questions per retry run, against 6 and 9 without). The 1 point gap in fact and citation recall is within run-to-run noise.
+- The only misses without retry were in one run: Q-007 (one search, so the Scarlet & Violet release was never seen) and Q-022 (the judge failed "four top-8 spots" for not listing the placings). Neither repeated in the other no-retry run, so they can't be credited to the retry's absence.
+- **Likely reason: the weak label almost never fires.** Searching with all 26 question texts gave 130 top-5 results and none was weak. Each retriever returns its top 20 of 62 documents, so a document in the fused top 5 has nearly always been found by both. The threshold doesn't separate good matches from poor ones (the Baltimore Regional is "strong" for a Regidrago VSTAR August 2024 search). The agent's own queries weren't checked, and the "none is about the card or its deck" part of the instruction could still have an effect. So this measures a weak signal, not whether retrying is useful.
+- Retry was still merged because it did no measurable harm, but this eval doesn't show that it helps. A better signal (e.g. a smaller depth, or the raw BM25 and vector scores) would be needed to test the idea properly.
