@@ -176,3 +176,20 @@ The retry labels each search result `match="strong"` when both BM25 and vector s
 - The only misses without retry were in one run: Q-007 (one search, so the Scarlet & Violet release was never seen) and Q-022 (the judge failed "four top-8 spots" for not listing the placings). Neither repeated in the other no-retry run, so they can't be credited to the retry's absence.
 - **Likely reason: the weak label almost never fires.** Searching with all 26 question texts gave 130 top-5 results and none was weak. Each retriever returns its top 20 of 62 documents, so a document in the fused top 5 has nearly always been found by both. The threshold doesn't separate good matches from poor ones (the Baltimore Regional is "strong" for a Regidrago VSTAR August 2024 search). The agent's own queries weren't checked, and the "none is about the card or its deck" part of the instruction could still have an effect. So this measures a weak signal, not whether retrying is useful.
 - Retry was still merged because it did no measurable harm, but this eval doesn't show that it helps. A better signal (e.g. a smaller depth, or the raw BM25 and vector scores) would be needed to test the idea properly.
+
+### 2026-10-31: can a retrieval score detect a missed document?
+
+An offline check with no Claude calls: the 21 question texts with expected documents were run as hybrid searches on the 62-document corpus and split into searches that found every expected document (14) and searches that missed one (7). Separation is the chance that a complete search scores higher than a partial one (0.5 = chance, 1.0 = perfect).
+
+| Signal | Separation | Range, searches that missed | Range, complete searches |
+|---|---|---|---|
+| Documents in both retrievers' top 5 | 0.46 | 0-3 | 0-3 |
+| Top vector similarity | 0.41 | 0.21-0.43 | 0.26-0.44 |
+| Top fused (RRF) score | 0.69 | about 0.03 | about 0.03 |
+| Top BM25 score | 0.72 | 8.45-16.11 | 8.51-25.02 |
+
+- No signal gives a usable threshold. The top-5 overlap and vector similarity are no better than chance, fused scores are all about 0.03, and BM25's ranges overlap heavily. Every miss is a two-source question, so BM25's separation may partly reflect question type.
+- The likely reason: these misses aren't weak searches. In Q-022 the search finds Worlds 2024 with a strong match. The missing Shrouded Fable release never names Regidrago, so nothing in the scores shows it's absent.
+- The agent's working retry is the model's own judgement that the evidence is incomplete, driven by the primary-source rule and "search again" instructions. That produces searches like "Shrouded Fable set release Kyurem".
+- Limits: only 21 searches, using question texts rather than the agent's own queries. This doesn't rule out a score signal on other corpora.
+- Decision: remove the `match="strong"` / `match="weak"` labels, since they say almost nothing about whether evidence is missing. No new score-based signal was built. The agent without labels has not been measured.
