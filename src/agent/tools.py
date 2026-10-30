@@ -4,8 +4,6 @@ from datetime import date
 from src.ingest.common import connect, read_env
 from src.prices import price_context
 
-STRONG_MATCH = 0.025
-
 TOOLS = [
     {
         "name": "search_documents",
@@ -14,8 +12,6 @@ TOOLS = [
             "announcements). Returns the 5 most relevant, each with its id and date. Search again "
             "with a different query if the first results don't explain the move, for example for "
             "the deck a card is played in, or the set that deck's main card came from."
-            ' Each result has match="strong" (keyword and meaning search both found it) or '
-            'match="weak" (only one did).'
         ),
         "input_schema": {
             "type": "object",
@@ -84,13 +80,12 @@ class ToolBox:
     def search_documents(self, query):
         results = self.retriever.search(query, k=5)
         parts = []
-        for doc_id, score in results:
+        for doc_id, _ in results:
             if doc_id not in self.seen_doc_ids:
                 self.seen_doc_ids.append(doc_id)
             doc = self.events[doc_id]
-            match = "strong" if score >= STRONG_MATCH else "weak"
             parts.append(
-                f'<document id="{doc_id}" date="{doc["date"]}" match="{match}">\n{doc["body"]}\n</document>')
+                f'<document id="{doc_id}" date="{doc["date"]}">\n{doc["body"]}\n</document>')
         return "\n\n".join(parts)
 
     def find_cards(self, name):

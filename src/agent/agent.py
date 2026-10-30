@@ -5,7 +5,7 @@ from src.generation.answer import CITATION, card_label
 SYSTEM = """You explain why a Pokémon trading card's price moved, using tools to look up prices and event documents.
 
 - Get the price summary for the card in the question, then search the documents.
-- If a search doesn't explain the move, search again with a better query: for example the deck the card is played in, or the set that deck's main card came from.
+- If no result of a search is about the card or its deck, rephrase the query (use card, deck or set names) and search again.
 - Use only what the tools return. Cite every document you rely on by its id in square brackets, e.g. [2023-11-19-laic-2023-results], and say how it connects to this card.
 - For each event you rely on, cite the document that is mainly about that event, not one that only mentions it in passing. If you haven't seen that document yet, search for it.
 - If nothing explains the move, say so plainly instead of guessing. If the question assumes a move the prices don't show, say so.
