@@ -2,7 +2,7 @@
   "bm25": {
     "recall@1": 0.57,
     "recall@3": 0.78,
-    "recall@5": 0.90,
+    "recall@5": 0.78,
     "1-source recall@5": 1.00,
     "2-source recall@5": 0.58
   }
