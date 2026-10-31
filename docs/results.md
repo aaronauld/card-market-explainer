@@ -193,3 +193,23 @@ An offline check with no Claude calls: the 21 question texts with expected docum
 - The agent's working retry is the model's own judgement that the evidence is incomplete, driven by the primary-source rule and "search again" instructions. That produces searches like "Shrouded Fable set release Kyurem".
 - Limits: only 21 searches, using question texts rather than the agent's own queries. This doesn't rule out a score signal on other corpora.
 - Decision: remove the `match="strong"` / `match="weak"` labels, since they say almost nothing about whether evidence is missing. No new score-based signal was built. The agent without labels has not been measured.
+
+## Phase 2 final comparison: 28 questions, 62 documents (2026-10-31)
+
+Same questions, corpus, model (`claude-opus-5-5`, medium effort) and scoring for both pipelines. This set adds two two-source questions (Q-027 Magma Basin, Q-028 Regidrago V 135), so 12 of 28 questions (43%) need two sources. It's the baseline for phase 3. The agent's final version has the primary-source rule and no strong/weak labels, and this is the first measurement of that version. Three documents also changed before these runs: Worlds 2024 (corrected to Regidrago V 135), LAIC 2023 and Paradox Rift (Entei and Iron Valiant ex facts).
+
+| Date | Pipeline | Questions | recall@1 | recall@3 | recall@5 | 1-source recall@5 | 2-source recall@5 |
+|---|---|---|---|---|---|---|---|
+| 2026-10-31 | Hybrid retrieval | 23 with expected docs (11 one-source, 12 two-source) | 0.48 | 0.67 | 0.74 | 1.00 | 0.50 |
+
+| Date | Pipeline | Questions | Fact recall | 2-source fact recall | Citation recall | Bad citations | Tool calls per question | Seconds per answer | Cost per answer |
+|---|---|---|---|---|---|---|---|---|---|
+| 2026-10-31 | Plain RAG, mean of 2 runs | 28 | 0.87 (0.86-0.88) | 0.71 | 0.74 (0.74-0.74) | 0 | — | 7.1 | $0.025 |
+| 2026-10-31 | Agent, mean of 2 runs | 28 | 0.99 (0.98-0.99) | 0.99 | 0.99 (0.98-1.00) | 0 | 2.9 | 11.5 | $0.063 |
+
+- **Result:** the agent's fact recall is 12 points higher and its citation recall 25 points higher, for about 2.5x the cost and 1.6x the latency (4.4 s more per answer). On one-source questions the two tie at 1.00 on facts, and almost all of the gap is on two-source questions, so plain RAG is the cheaper choice when one document is enough.
+- Plain RAG's failures come from retrieval. Two-source recall@5 is 0.50, and all five documents for Q-019 and Q-027 miss. Its answers then say the documents don't explain the move, with no bad citations.
+- Q-027 (Magma Basin) separates the pipelines most: plain RAG scored 0.00 on facts in both runs, the agent 1.00 in both. The agent's own query, "Magma Basin deck tournament results November 2023", finds the LAIC document that the full question text misses. In one run it stopped there, so citation recall was 0.5 even though the facts passed.
+- Q-023 and Q-028 (same card name, different printings): both pipelines passed Q-023 in both runs, and the agent passed Q-028 in both. Plain RAG scored 0.50 on Q-028 because it never retrieved Shrouded Fable.
+- Agent fact misses: Q-018 in one run and Q-022 in one run, both judge strictness seen before (not saying "reprint or ban"; "four top-8 spots" instead of the placings). Plain RAG also missed Q-021 in one run for not stating that there was no spike. These facts were left unchanged.
+- Caveats: 28 questions is small; one question moves fact recall by about 3.6 points. The documents were written for this eval, and the distractors were chosen for the months and decks the questions cover. Treat the size of the gap as specific to this corpus. Fact recall is judged by Claude, so those scores also depend on the judge.

@@ -11,14 +11,15 @@ Pokémon card prices sometimes jump or crash, and the reason is usually scattere
 
 ## Status
 
-Phase 1 (plain RAG) is working end to end: retrieval, price lookup, answers with citations from Claude, and automatic scoring. Phase 2 (agentic version) has started: a hand-written tool-use loop in which Claude chooses when to look up prices and search documents. It is scored with the same harness.
+Phase 1 (plain RAG) is working end to end: retrieval, price lookup, answers with citations from Claude, and automatic scoring. Phase 2 (agentic version) is measured: a hand-written tool-use loop in which Claude chooses when to look up prices and search documents. It is scored with the same harness.
 
 - Local Postgres with pgvector via Docker Compose.
 - Card catalogue (16,329 cards) loaded from the [TCGdex](https://tcgdex.dev) API.
 - Daily TCGplayer price history (about 2.2 million rows, Nov 2022 to Sep 2024, with a gap from Dec 2023 to Apr 2024) loaded locally from [tcgdex/price-history](https://github.com/tcgdex/price-history). See [docs/data-notes.md](docs/data-notes.md) for coverage gaps and licensing.
-- Eval set: 26 labelled price moves in [docs/eval-questions.md](docs/eval-questions.md), and 26 event documents in `data/events/` (9 the questions need, 17 distractors).
+- Eval set: 28 labelled price moves in [docs/eval-questions.md](docs/eval-questions.md), and 62 event documents in `data/events/`.
 - Hand-written retrievers measured with the same recall@k harness: BM25 keyword search (recall@5 0.85), Voyage embeddings in pgvector (0.88) and a hybrid of both with Reciprocal Rank Fusion (0.94). See [docs/results.md](docs/results.md).
 - Answers: hybrid retrieval plus a weekly price summary, explained by Claude Opus 5.5 with citations to event documents. On the 21 questions (mean of 2 runs): fact recall 0.98, citation recall 0.94, no invented citations, about 7.1 s and $0.024 per answer.
 - Agent: on the same 21 questions (mean of 2 runs): fact recall 1.00, citation recall 0.96, no invented citations, 2.6 tool calls, about 10.8 s and $0.050 per answer. It made a multi-hop link plain RAG misses on one question (Q-008), but not on another (Q-006). After adding a general rule to cite the primary document for each event: citation recall 1.00 on both runs, 2.86 tool calls, about 11.0 s and $0.057 per answer.
 - With 5 harder questions added (26 in all, mean of 2 runs): plain RAG has fact recall 1.00, citation recall 0.95, 7.5 s and $0.025 per answer. The agent has 0.99, 1.00, 11.5 s and $0.063. Both got all five new questions right, so the corpus was then grown with realistic distractors.
-- On 62 documents with distractors (mean of 2 runs): plain RAG has fact recall 0.92, citation recall 0.81, 7.1 s and $0.025 per answer. The agent has 1.00, 1.00, 11.8 s and $0.064. The agent's weak-retrieval retry made no measurable difference over the agent without it (0.99, 0.99).
+- On 62 documents with distractors (mean of 2 runs): plain RAG has fact recall 0.92, citation recall 0.81, 7.1 s and $0.025 per answer. The agent has 1.00, 1.00, 11.8 s and $0.064. A score-based weak-retrieval label made no measurable difference and was removed.
+- Final phase 2 comparison (28 questions, 62 documents, mean of 2 runs): plain RAG has fact recall 0.87, citation recall 0.74, 7.1 s and $0.025 per answer. The agent has 0.99, 0.99, 11.5 s and $0.063. Almost all of the gap is on two-source questions. See [docs/results.md](docs/results.md).
