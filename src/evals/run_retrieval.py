@@ -65,6 +65,14 @@ def main(name):
         print(
             f"recall@5 for {n}-source questions ({len(subset)}): {average(subset):.2f}")
 
+        subset_scores = {n: average([s[5] for q, s in results if q["sources_needed"] == n])
+                         for n in (1, 2)}
+    return {
+        **{f"recall@{k}": average([s[k] for _, s in results]) for k in K_VALUES},
+        "1-source recall@5": subset_scores[1],
+        "2-source recall@5": subset_scores[2],
+    }
+
 
 if __name__ == "__main__":
     main(sys.argv[1] if len(sys.argv) > 1 else "bm25")
