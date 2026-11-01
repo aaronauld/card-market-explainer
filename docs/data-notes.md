@@ -58,7 +58,7 @@ Checked on: 2026-10-25. Shallow clone at `C:/data/tcgdex-price-history` (outside
 ### Limits / licence
 - README says MIT and links a LICENSE file, but that file is not in the repo.
 - Maintainers replied that the data can be used and that I should copy the licence; they will send a copy. Keep their message.
-- Until the licence text arrives: use locally only, do not publish raw data or price charts built from it.
+- Until the licence text arrives: use locally only, do not publish raw data or price charts built from it. The private EC2 server holds a copy, with no public access; see `deployment.md`.
 - The prices originally come from TCGplayer, which has its own terms. Check them before publishing anything derived.
 
 ### Open questions

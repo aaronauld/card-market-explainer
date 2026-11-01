@@ -260,3 +260,12 @@ The agent's API call now sets top-level automatic caching (`cache_control: {"typ
 - Latency and accuracy show no change beyond run-to-run noise.
 - **Correction:** the two caching runs printed $0.065 per question because of a bug in that version, where output tokens were counted twice in the answer's totals. The figures above are recomputed from the saved traces, which were not affected. The bug is fixed.
 - Each question's first call read nothing from the cache, so the tools and system prompt (part of the roughly 1,250 tokens first written) aren't shared between questions. An explicit breakpoint after the system prompt might save a little more; not tested.
+
+## BM25 vs hybrid on the final set (2026-11-01)
+
+| Date | Retriever | Corpus | Questions | recall@1 | recall@3 | recall@5 | 1-source recall@5 | 2-source recall@5 |
+|---|---|---|---|---|---|---|---|---|
+| 2026-11-01 | BM25 | 62 event docs | 23 (11 one-source, 12 two-source) | 0.57 | 0.78 | 0.78 | 1.00 | 0.58 |
+| 2026-10-31 | Hybrid (RRF) | 62 event docs | 23 (11 one-source, 12 two-source) | 0.48 | 0.67 | 0.74 | 1.00 | 0.50 |
+
+On this set BM25 alone scores slightly above hybrid, the reverse of the 26-document corpus. The recall@5 gap is about one or two questions, so it doesn't show BM25 is better. Vector search wasn't re-measured on this set, and both answer pipelines still use hybrid. Trying plain RAG with BM25 is a possible experiment.
