@@ -1,6 +1,7 @@
 """The agent: Claude decides which tools to call, in a loop, until it writes an answer."""
 from src.agent.tools import TOOLS, ToolBox
 from src.generation.answer import CITATION, card_label
+from src.tracing import Trace
 
 SYSTEM = """You explain why a Pokémon trading card's price moved, using tools to look up prices and event documents.
 
@@ -25,10 +26,14 @@ def answer_with_agent(question, card_id, variant, move_date, retriever, llm, eve
         f"<move_date>\n{move_date}\n</move_date>"
     )}]
     input_tokens = output_tokens = 0
+    trace = Trace()
     tool_calls = []
 
     for _ in range(MAX_ROUNDS):
-        response = llm.create(SYSTEM, messages, tools=TOOLS)
+        with trace.span("claude") as span:
+            response = llm.create(SYSTEM, messages, tools=TOOLS)
+            span["input_tokens"] = response.usage.input_tokens
+            span["output_tokens"] = response.usage.output_tokens
         input_tokens += response.usage.input_tokens
         output_tokens += response.usage.output_tokens
         messages.append({"role": "assistant", "content": response.content})
@@ -42,7 +47,9 @@ def answer_with_agent(question, card_id, variant, move_date, retriever, llm, eve
                 continue
             tool_calls.append({"name": block.name, "input": block.input})
             try:
-                output, is_error = toolbox.run(block.name, block.input), False
+                with trace.span(block.name, input=block.input):
+                    output = toolbox.run(block.name, block.input)
+                is_error = False
             except Exception as err:
                 output, is_error = f"Tool error: {err}", True
             results.append({"type": "tool_result", "tool_use_id": block.id,
@@ -62,6 +69,7 @@ def answer_with_agent(question, card_id, variant, move_date, retriever, llm, eve
         "input_tokens": input_tokens,
         "output_tokens": output_tokens,
         "tool_calls": tool_calls,
+        "trace": trace.spans,
     }
 
 

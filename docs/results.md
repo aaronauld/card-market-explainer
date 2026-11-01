@@ -213,3 +213,27 @@ Same questions, corpus, model (`claude-opus-5-5`, medium effort) and scoring for
 - Q-023 and Q-028 (same card name, different printings): both pipelines passed Q-023 in both runs, and the agent passed Q-028 in both. Plain RAG scored 0.50 on Q-028 because it never retrieved Shrouded Fable.
 - Agent fact misses: Q-018 in one run and Q-022 in one run, both judge strictness seen before (not saying "reprint or ban"; "four top-8 spots" instead of the placings). Plain RAG also missed Q-021 in one run for not stating that there was no spike. These facts were left unchanged.
 - Caveats: 28 questions is small; one question moves fact recall by about 3.6 points. The documents were written for this eval, and the distractors were chosen for the months and decks the questions cover. Treat the size of the gap as specific to this corpus. Fact recall is judged by Claude, so those scores also depend on the judge.
+
+## Where the time and money go (2026-11-01)
+
+Each step of an answer is now timed and saved in the run file as a trace (`src/tracing.py`), and `run_answers` prints a per-step summary. One run of each pipeline on the 28 questions and 62 documents. Fact and citation scores from these runs match the baseline within noise (plain RAG 0.86 and 0.74, agent 0.98 and 1.00).
+
+| Per question | Plain RAG | Agent |
+|---|---|---|
+| Seconds per answer | 7.0 | 10.9 |
+| Claude: calls | 1.0 | 2.9 |
+| Claude: seconds | 6.92 | 10.05 |
+| Search: calls | 1.0 | 1.9 |
+| Search: seconds | 0.05 | 0.84 |
+| Price lookup: seconds | 0.02 | 0.02 |
+| Input tokens | 3,113 | 12,368 |
+| Output tokens | 648 | 756 |
+| Input cost | $0.013 | $0.049 |
+| Output cost | $0.013 | $0.015 |
+| Total answer cost | $0.025 | $0.065 |
+
+- **Latency is almost all Claude:** about 99% of plain RAG's time and 92% of the agent's. Of the agent's extra 3.9 s, about 3.1 s is extra Claude time and about 0.8 s is search.
+- **The agent's extra cost is almost all input tokens.** It reads about 4x as many (12,368 vs 3,113) but writes only about 17% more. Every round resends the whole conversation, including every document already returned. Input is about three quarters of its cost.
+- **No Voyage rate-limit wait showed up in this run:** the slowest of 54 agent searches took 1.07 s. Earlier runs weren't traced, so this doesn't show they had none.
+- **Plain RAG's search time is understated.** Its query embeddings are made in one batch before the timer starts, so its search takes 0.05 s, while each agent search takes a median of 0.44 s including its embedding request. This difference is under 0.5 s per question, so it doesn't change the comparison.
+- The agent's final Claude call averages 5.62 s and 463 output tokens. Its earlier calls together average 4.44 s and 292 output tokens per question.

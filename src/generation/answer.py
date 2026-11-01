@@ -5,6 +5,7 @@ from src.generation.claude import Claude
 from src.ingest.common import connect, read_env
 from src.ingest.events import load_events
 from src.prices import price_context
+from src.tracing import Trace
 
 SYSTEM = """You explain why a Pokémon trading card's price moved, using only the weekly prices and documents provided.
 
@@ -45,20 +46,25 @@ def build_prompt(question, card, prices, documents):
 
 def answer(question, card_id, variant, move_date, retriever, llm, events, k=5, condition="good"):
     """Run the whole pipeline for one question. Returns a dict for the harness."""
-    doc_ids = [doc_id for doc_id, _ in retriever.search(question, k=k)]
-    prompt = build_prompt(
-        question,
-        card_label(card_id),
-        price_context(card_id, variant, move_date, condition=condition),
-        [events[doc_id] for doc_id in doc_ids],
-    )
-    text, usage = llm.ask(SYSTEM, prompt)
+    trace = Trace()
+    with trace.span("search"):
+        doc_ids = [doc_id for doc_id, _ in retriever.search(question, k=k)]
+    with trace.span("prices"):
+        prices = price_context(
+            card_id, variant, move_date, condition=condition)
+    prompt = build_prompt(question, card_label(card_id), prices,
+                          [events[doc_id] for doc_id in doc_ids])
+    with trace.span("claude") as span:
+        text, usage = llm.ask(SYSTEM, prompt)
+        span["input_tokens"] = usage.input_tokens
+        span["output_tokens"] = usage.output_tokens
     return {
         "answer": text,
         "retrieved": doc_ids,
         "cited": CITATION.findall(text),
         "input_tokens": usage.input_tokens,
         "output_tokens": usage.output_tokens,
+        "trace": trace.spans,
     }
 
 

@@ -12,6 +12,7 @@ from src.generation.answer import answer
 from src.generation.claude import Claude
 from src.ingest.events import load_events
 from src.agent.agent import answer_with_agent
+from src.tracing import Trace
 
 DOLLARS_PER_MILLION = {"input": 4.00, "output": 20.00}  # claude-opus-5-5
 
@@ -72,6 +73,12 @@ def main(retriever_name):
     print(f"avg tool calls per question: {average(calls):.1f}")
     print(
         f"avg seconds per answer: {average([r['seconds'] for r in rows]):.1f}")
+    all_steps = Trace()
+    all_steps.spans = [span for r in rows for span in r["trace"]]
+    print("time per question by step:")
+    for name, step in all_steps.summary().items():
+        print(f"  {name}: {step['calls'] / len(rows):.1f} calls, "
+              f"{step['seconds'] / len(rows):.2f}s")
     print(f"answer cost: ${sum(r['cost'] for r in rows):.2f} total, "
           f"${average([r['cost'] for r in rows]):.3f} per question")
 
