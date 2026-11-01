@@ -13,19 +13,7 @@ from src.generation.claude import Claude
 from src.ingest.events import load_events
 from src.agent.agent import answer_with_agent
 from src.tracing import Trace
-
-DOLLARS_PER_MILLION = {"input": 4.00, "output": 20.00,
-                       "cache_read": 0.20, "cache_write": 5.00}  # claude-opus-5-5
-
-
-def cost(result):
-    tokens = {
-        "input": result["input_tokens"],
-        "output": result["output_tokens"],
-        "cache_read": result.get("cache_read_tokens", 0),
-        "cache_write": result.get("cache_write_tokens", 0),
-    }
-    return sum(tokens[kind] * DOLLARS_PER_MILLION[kind] for kind in tokens) / 1_000_000
+from src.generation.claude import cost
 
 
 def main(retriever_name):

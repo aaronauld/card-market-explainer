@@ -1,2 +1,4 @@
 psycopg[binary]
 anthropic
+fastapi
+uvicorn
