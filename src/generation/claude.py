@@ -53,6 +53,7 @@ class Claude:
             max_tokens=max_tokens,
             system=system,
             messages=messages,
+            cache_control={"type": "ephemeral"},
             output_config={"effort": self.effort},
             betas=["server-side-fallback-2026-07-01"],
             fallbacks="default",

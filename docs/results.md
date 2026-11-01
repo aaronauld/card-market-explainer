@@ -237,3 +237,26 @@ Each step of an answer is now timed and saved in the run file as a trace (`src/t
 - **No Voyage rate-limit wait showed up in this run:** the slowest of 54 agent searches took 1.07 s. Earlier runs weren't traced, so this doesn't show they had none.
 - **Plain RAG's search time is understated.** Its query embeddings are made in one batch before the timer starts, so its search takes 0.05 s, while each agent search takes a median of 0.44 s including its embedding request. This difference is under 0.5 s per question, so it doesn't change the comparison.
 - The agent's final Claude call averages 5.62 s and 463 output tokens. Its earlier calls together average 4.44 s and 292 output tokens per question.
+
+## Prompt caching for the agent (2026-11-01)
+
+The agent's API call now sets top-level automatic caching (`cache_control: {"type": "ephemeral"}`, 5-minute lifetime). Plain RAG is unchanged. Cost now charges uncached input at $4, cache reads at $0.20, cache writes at $5 and output at $20 per million tokens. Two runs on the 28 questions and 62 documents, compared with the uncached traced run above.
+
+| Per question | Agent, no caching (1 run) | Agent, caching (mean of 2 runs) |
+|---|---|---|
+| Fact recall | 0.98 | 1.00 |
+| Citation recall | 1.00 | 1.00 |
+| Seconds per answer | 10.9 | 10.7 |
+| Uncached input tokens | 12,368 | 8 |
+| Cache read tokens | — | 5,557 |
+| Cache write tokens | — | 6,722 |
+| Output tokens | 756 | 750 |
+| Input cost (uncached, read and write) | $0.049 | $0.035 |
+| Output cost | $0.015 | $0.015 |
+| **Total answer cost** | **$0.065** | **$0.050** |
+
+- **Caching cut the agent's cost by about 23%,** from $0.065 to $0.050 per answer, or about 2x plain RAG instead of 2.6x. The cache was working as designed: each call read what earlier calls wrote.
+- Input cost fell only about 30% even though reads are 95% cheaper than normal input. With about 3 calls per question, most tokens are read once or twice, and over half are writes at the higher $5 rate, including the last call's new content, which is never read back. Longer loops should gain more; this wasn't measured.
+- Latency and accuracy show no change beyond run-to-run noise.
+- **Correction:** the two caching runs printed $0.065 per question because of a bug in that version, where output tokens were counted twice in the answer's totals. The figures above are recomputed from the saved traces, which were not affected. The bug is fixed.
+- Each question's first call read nothing from the cache, so the tools and system prompt (part of the roughly 1,250 tokens first written) aren't shared between questions. An explicit breakpoint after the system prompt might save a little more; not tested.

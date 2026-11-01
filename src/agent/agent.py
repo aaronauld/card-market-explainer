@@ -25,17 +25,22 @@ def answer_with_agent(question, card_id, variant, move_date, retriever, llm, eve
         f"<card>\n{card_label(card_id)}, variant {variant}\n</card>\n\n"
         f"<move_date>\n{move_date}\n</move_date>"
     )}]
-    input_tokens = output_tokens = 0
+    input_tokens = output_tokens = cache_read_tokens = cache_write_tokens = 0
     trace = Trace()
     tool_calls = []
 
     for _ in range(MAX_ROUNDS):
         with trace.span("claude") as span:
             response = llm.create(SYSTEM, messages, tools=TOOLS)
-            span["input_tokens"] = response.usage.input_tokens
-            span["output_tokens"] = response.usage.output_tokens
-        input_tokens += response.usage.input_tokens
-        output_tokens += response.usage.output_tokens
+            usage = response.usage
+            span["input_tokens"] = usage.input_tokens
+            span["output_tokens"] = usage.output_tokens
+            span["cache_read_tokens"] = usage.cache_read_input_tokens or 0
+            span["cache_write_tokens"] = usage.cache_creation_input_tokens or 0
+        input_tokens += span["input_tokens"]
+        output_tokens += span["output_tokens"]
+        cache_read_tokens += span["cache_read_tokens"]
+        cache_write_tokens += span["cache_write_tokens"]
         messages.append({"role": "assistant", "content": response.content})
 
         if response.stop_reason != "tool_use":
@@ -70,6 +75,8 @@ def answer_with_agent(question, card_id, variant, move_date, retriever, llm, eve
         "output_tokens": output_tokens,
         "tool_calls": tool_calls,
         "trace": trace.spans,
+        "cache_read_tokens": cache_read_tokens,
+        "cache_write_tokens": cache_write_tokens,
     }
 
 
